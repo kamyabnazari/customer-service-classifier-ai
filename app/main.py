@@ -1,6 +1,6 @@
 import streamlit as st
-from dependencies import get_database
 from config import settings
+from dependencies import get_database
 
 database = get_database()
 

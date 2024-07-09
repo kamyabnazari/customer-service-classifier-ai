@@ -34,11 +34,10 @@ The project aims to enhance customer interactions and provide strategic insights
 - [Git](https://git-scm.com) [Version Control]
 - [GitHub](https://github.com/) [Code Hosting]
 
-#### Frontend
+#### Application
 
-- [Streamlit](https://www.typescriptlang.org/) [Programming Language]
 - [Python](https://www.python.org/downloads/) [Programming Language]
-- [FastApi](https://fastapi.tiangolo.com/) [Backend Framework]
+- [Streamlit](https://www.typescriptlang.org/) [Programming Language]
 - [OpenAI GPT](https://openai.com/) [Language Processing]
 
 ### Prerequisites
@@ -81,7 +80,7 @@ pip3 install -r requirements.txt
 To run this service, run the following commands:
 
 ```
-uvicorn app.main:app --reload
+streamlit run app/main.py
 ```
 
 ---
