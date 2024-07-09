@@ -1,11 +1,8 @@
-from fastapi import FastAPI
-from app.routers import root, predict_routes
-from app.dependencies import configure_cors, lifespan
+import streamlit as st
+from dependencies import get_database
+from config import settings
 
-app = FastAPI(title="CustomerServiceClassifierAI Project", lifespan=lifespan)
+database = get_database()
 
-# Configure CORS
-configure_cors(app)
-
-app.include_router(root.router)
-app.include_router(predict_routes.router, prefix="/api/predict")
+# Streamlit app
+st.title("OpenAI Question Answering App")

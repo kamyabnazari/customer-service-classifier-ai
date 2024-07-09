@@ -1,16 +1,14 @@
-from sqlalchemy import MetaData, Table, Column, Integer, String, DateTime, Text
+from sqlalchemy import MetaData, Table, Column, Integer, String, DateTime
 
 metadata = MetaData()
 
-predictions = Table(
-    "predictions",
+query_history = Table(
+    "query_history",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("name", String(255), nullable=False),
-    Column("request", Text, nullable=False),
-    Column("response", Text, nullable=False),
+    Column("question", String, nullable=False),
+    Column("answer", String, nullable=False),
     Column("created_at", DateTime, nullable=False),
-    Column("status", String(50), nullable=False)
 )
 
 def create_tables(engine):

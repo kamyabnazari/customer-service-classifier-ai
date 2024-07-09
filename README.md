@@ -81,7 +81,7 @@ pip3 install -r requirements.txt
 To run this service, run the following commands:
 
 ```
-uvicorn app.main:app --reload --host 0.0.0.0 --port 5003
+uvicorn app.main:app --reload
 ```
 
 ---
