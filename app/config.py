@@ -1,12 +1,11 @@
 from dotenv import load_dotenv
-from openai import OpenAI
 import os
 
+# Load environment variables
 load_dotenv()
 
-openai = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-    )
+# Get OpenAI API key from environment variables
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Create the CustomerServiceClassifierAI data folder
 folder_path = './customer_service_classifier_ai_data'
