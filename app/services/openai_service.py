@@ -1,10 +1,10 @@
 import requests
-from config import settings
+from config import OPENAI_API_KEY
 
 def ask_openai(question: str) -> str:
     response = requests.post(
         "https://api.openai.com/v1/engines/davinci-codex/completions",
-        headers={"Authorization": f"Bearer {settings.openai_api_key}"},
+        headers={"Authorization": f"Bearer {OPENAI_API_KEY}"},
         json={
             "prompt": question,
             "max_tokens": 100

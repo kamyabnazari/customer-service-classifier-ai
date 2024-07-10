@@ -1,9 +1,14 @@
-from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+from openai import OpenAI
+import os
 
-class Settings(BaseSettings):
-    openai_api_key: str = "default-openai-api-key"
+load_dotenv()
 
-    class Config:
-        env_file = ".env"
+openai = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+    )
 
-settings = Settings()
+# Create the CustomerServiceClassifierAI data folder
+folder_path = './customer_service_classifier_ai_data'
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
