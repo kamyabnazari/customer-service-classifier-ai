@@ -13,10 +13,14 @@ else:
     if "categories" in global_state.datasets:
         st.write("Categories")
         st.dataframe(global_state.datasets["categories"], use_container_width=True)
+        
+        st.divider()
 
     if "test" in global_state.datasets:
         st.write("Test Data")
         st.dataframe(global_state.datasets["test"], use_container_width=True)
+        
+        st.divider()
 
     if "fine_tuning" in global_state.datasets:
         st.write("Fine Tuning Data")

@@ -26,7 +26,7 @@ with col2:
     # Conditionally render buttons
     if not st.session_state.dataset_loaded:
         # Load dataset button
-        if st.button("Load Dataset"):
+        if st.button("Load Dataset", use_container_width=True):
             try:
                 if selected_dataset:
                     # Convert back to lowercase to match the folder names
@@ -39,11 +39,13 @@ with col2:
                 st.error(f"Failed to load dataset: {e}")
     else:
         # Delete dataset button
-        if st.button("Delete Dataset", type="primary"):
+        if st.button("Delete Dataset", type="primary", use_container_width=True):
             global_state.datasets.clear()
             st.session_state.dataset_loaded = False
             st.success("Dataset deleted successfully!")
             st.rerun()
+
+st.divider()
 
 col1, col2, col3 = st.columns([1, 1, 1])
 
