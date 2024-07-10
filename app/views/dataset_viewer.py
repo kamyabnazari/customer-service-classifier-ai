@@ -11,18 +11,22 @@ st.sidebar.title("Dataset Options")
 data_dir = './data'
 datasets = list_datasets(data_dir)
 
-# Select dataset
-selected_dataset = st.selectbox("Select a dataset", datasets)
+left, right = st.columns(2, vertical_alignment="top")
 
-# Load and display selected dataset
-if selected_dataset:
-    dataset_path = os.path.join(data_dir, selected_dataset)
-    dataset = load_dataset(dataset_path)
-    
-    st.write(f"Dataset: {selected_dataset}")
-    for file_name, data in dataset.items():
-        st.write(f"File: {file_name}")
-        if isinstance(data, pd.DataFrame):
-            st.dataframe(data)
-        else:
-            st.json(data)
+# Select dataset
+with left:
+    selected_dataset = st.selectbox("Select a dataset", datasets)
+
+with right:
+    # Load and display selected dataset
+    if selected_dataset:
+        dataset_path = os.path.join(data_dir, selected_dataset)
+        dataset = load_dataset(dataset_path)
+        
+        st.write(f"Dataset: {selected_dataset}")
+        for file_name, data in dataset.items():
+            st.write(f"File: {file_name}")
+            if isinstance(data, pd.DataFrame):
+                st.dataframe(data)
+            else:
+                st.json(data)
