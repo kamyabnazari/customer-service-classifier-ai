@@ -7,14 +7,3 @@ def set_streamlit():
     # Set Navigation Bar Logo
     st.logo(image="misc/customer_service_classifier_ai_icon.png")
     st.sidebar.title("Navigation")
-
-    # Hide deployed button
-    st.markdown(
-        r"""
-        <style>
-        .stDeployButton {
-                visibility: hidden;
-            }
-        </style>
-        """, unsafe_allow_html=True
-    )
