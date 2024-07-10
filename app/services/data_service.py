@@ -17,3 +17,17 @@ def load_dataset(folder_path: str) -> dict:
             with open(file_path, 'r') as f:
                 dataset[file_name] = json.load(f)
     return dataset
+
+def load_datasets(selected_dataset, data_dir):
+    dataset_path = os.path.join(data_dir, selected_dataset)
+    dataset = load_dataset(dataset_path)
+    
+    datasets = {}
+    for file_name, data in dataset.items():
+        if file_name == 'test.csv':
+            datasets["test"] = pd.DataFrame(data)
+        elif file_name == 'fine_tuning.csv':
+            datasets["fine_tuning"] = pd.DataFrame(data)
+        elif file_name == 'categories.json':
+            datasets["categories"] = data
+    return datasets
