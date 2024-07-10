@@ -16,7 +16,7 @@ datasets = list_datasets(data_dir)
 # Capitalize the first letter of each dataset name
 datasets_capitalized = [dataset.capitalize() for dataset in datasets]
 
-col1, col2 = st.columns([4, 1], vertical_alignment="bottom")
+col1, col2 = st.columns([3, 1], vertical_alignment="bottom")
 
 with col1:
     # Select dataset
