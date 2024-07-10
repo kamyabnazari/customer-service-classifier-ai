@@ -1,4 +1,4 @@
-# CustomerServiceClassifierAI
+# Customer Service Classifier AI
 
 <div style="text-align: center;">
   <img src="misc/customer_service_classifier_ai_icon.png" alt="CustomerServiceClassifierAI Framework Logo" style="max-width: 30%; height: auto; display: block; margin: 0 auto;">
