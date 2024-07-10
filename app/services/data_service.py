@@ -7,15 +7,12 @@ def list_datasets(data_dir: str) -> list:
     return [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
 
 def load_dataset(folder_path: str) -> dict:
-    """Load CSV and JSON files from a dataset folder into a dictionary of Pandas DataFrames."""
+    """Load CSV files from a dataset folder into a dictionary of Pandas DataFrames."""
     dataset = {}
     for file_name in os.listdir(folder_path):
         file_path = os.path.join(folder_path, file_name)
         if file_name.endswith('.csv'):
             dataset[file_name] = pd.read_csv(file_path)
-        elif file_name.endswith('.json'):
-            with open(file_path, 'r') as f:
-                dataset[file_name] = json.load(f)
     return dataset
 
 def load_datasets(selected_dataset, data_dir):
@@ -28,6 +25,6 @@ def load_datasets(selected_dataset, data_dir):
             datasets["test"] = pd.DataFrame(data)
         elif file_name == 'fine_tuning.csv':
             datasets["fine_tuning"] = pd.DataFrame(data)
-        elif file_name == 'categories.json':
-            datasets["categories"] = data
+        elif file_name == 'categories.csv':
+            datasets["categories"] = pd.DataFrame(data)
     return datasets
