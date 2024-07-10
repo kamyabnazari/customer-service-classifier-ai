@@ -43,5 +43,5 @@ def write_results_to_csv(model, classification_type, input_text, classification)
     with open(csv_file_path, 'a', newline='') as csv_file:
         writer = csv.writer(csv_file)
         if not file_exists:
-            writer.writerow(["Request", "Category"])
+            writer.writerow(["request", "category"])
         writer.writerow([input_text, classification])

@@ -1,5 +1,6 @@
 import streamlit as st
 from state import global_state
+from services.experiment_service import classify_test_samples
 from services.openai_service import (
     classify_with_gpt_3_5_turbo_zero_shot,
     classify_with_gpt_3_5_turbo_few_shot,
@@ -58,6 +59,11 @@ else:
 
             else:
                 st.write("Please enter a text to classify.")
+
+        # Button to classify the first 3 samples
+        if st.button("Classify First 3 Samples", use_container_width=True):
+            classify_test_samples(global_state, model_option, method_option)
+            st.success("First 3 samples classified and results saved.")
 
     st.divider()
 
