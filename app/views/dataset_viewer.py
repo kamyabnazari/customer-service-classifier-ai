@@ -5,6 +5,7 @@ import os
 
 # Set page title
 st.title("Dataset Viewer")
+st.sidebar.title("Dataset Options")
 
 # List available datasets
 data_dir = './data'

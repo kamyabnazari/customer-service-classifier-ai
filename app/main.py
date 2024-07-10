@@ -5,10 +5,10 @@ import settings
 settings.set_streamlit()
 
 # Define the pages
-pages = {
-    "Home": [st.Page("views/home.py", title="Customer Service Classifier AI")],
-    "Dataset Viewer": [st.Page("views/dataset_viewer.py", title="Dataset Viewer")]
-}
+pages = [
+    st.Page("views/home.py", title="Home"),
+    st.Page("views/dataset_viewer.py", title="Dataset Viewer")
+]
 
 # Display the selected page
 pg = st.navigation(pages)

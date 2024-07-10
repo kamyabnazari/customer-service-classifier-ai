@@ -3,6 +3,7 @@ from services.openai_service import generate_response
 
 # Set page title
 st.title("Customer Service Classifier AI")
+st.sidebar.title("Options")
 
 # Input field for user to enter their prompt
 user_input = st.text_input("Enter your prompt:")
