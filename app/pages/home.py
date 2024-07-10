@@ -4,7 +4,10 @@ from state import global_state
 
 # Set page title
 st.title("Home")
-st.sidebar.title("Options")
+
+# Initialize session state for dataset loaded state
+if "dataset_loaded" not in st.session_state:
+    st.session_state.dataset_loaded = False
 
 # List available datasets
 data_dir = './data'
@@ -17,11 +20,7 @@ col1, col2 = st.columns([4, 1], vertical_alignment="bottom")
 
 with col1:
     # Select dataset
-    selected_dataset = st.selectbox("Select a dataset", datasets_capitalized)
-
-# Initialize session state for dataset loaded state
-if "dataset_loaded" not in st.session_state:
-    st.session_state.dataset_loaded = False
+    selected_dataset = st.selectbox("Select a dataset", datasets_capitalized, disabled=st.session_state.dataset_loaded)
 
 with col2:
     # Conditionally render buttons
