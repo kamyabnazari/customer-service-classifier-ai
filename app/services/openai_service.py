@@ -1,6 +1,6 @@
 from openai import OpenAI
 from config import OPENAI_API_KEY
-from .logging_service import write_log_to_file
+from .logging_service import write_log_to_file, write_results_to_csv
 
 # Set up the OpenAI API client
 openai = OpenAI(api_key=OPENAI_API_KEY)
@@ -44,6 +44,7 @@ def classify_inquiry_zero_shot(text, categories, model, classification_type):
 
     classification = response.choices[0].message.content.strip()
     write_log_to_file(model, classification_type, system_message, text, classification)
+    write_results_to_csv(model, classification_type, text, classification)
     return classification
 
 def classify_inquiry_few_shot(text, categories, model, classification_type):
@@ -76,4 +77,5 @@ def classify_inquiry_few_shot(text, categories, model, classification_type):
 
     classification = response.choices[0].message.content.strip()
     write_log_to_file(model, classification_type, system_message, text, classification)
+    write_results_to_csv(model, classification_type, text, classification)
     return classification
