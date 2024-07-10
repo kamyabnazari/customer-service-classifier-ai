@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import json
 
 def list_datasets(data_dir: str) -> list:
     """List all dataset folders in the specified data directory."""
@@ -12,7 +11,9 @@ def load_dataset(folder_path: str) -> dict:
     for file_name in os.listdir(folder_path):
         file_path = os.path.join(folder_path, file_name)
         if file_name.endswith('.csv'):
-            dataset[file_name] = pd.read_csv(file_path)
+            df = pd.read_csv(file_path)
+            df.columns = [col.capitalize() for col in df.columns]
+            dataset[file_name] = df
     return dataset
 
 def load_datasets(selected_dataset, data_dir):
