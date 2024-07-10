@@ -1,42 +1,46 @@
 from openai import OpenAI
 from config import OPENAI_API_KEY
+from .logging_service import write_log_to_file
 
 # Set up the OpenAI API client
 openai = OpenAI(api_key=OPENAI_API_KEY)
 
-def classify_with_gpt_3_5_turbo(text, categories):
-    return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo")
+def classify_with_gpt_3_5_turbo_zero_shot(text, categories):
+    return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo", classification_type="zero_shot")
 
-def classify_with_gpt_4o(text, categories):
-    return classify_inquiry_zero_shot(text, categories, model="gpt-4o")
+def classify_with_gpt_4o_zero_shot(text, categories):
+    return classify_inquiry_zero_shot(text, categories, model="gpt-4o", classification_type="zero_shot")
 
-def classify_inquiry_zero_shot(text, categories, model):
+def classify_with_gpt_3_5_turbo_few_shot(text, categories):
+    return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo", classification_type="few_shot")
+
+def classify_with_gpt_4o_few_shot(text, categories):
+    return classify_inquiry_few_shot(text, categories, model="gpt-4o", classification_type="few_shot")
+
+def classify_inquiry_zero_shot(text, categories, model, classification_type):
     categories_str = ", ".join(categories)
+    system_message = f"You are a Customer Service Inquiry classifier. Classify the following Inquiry into one of these categories: {categories_str}. Respond only with the category name."
+    
     messages = [
-        {"role": "system", "content": f"You are a text classifier. Classify the following text into one of these categories: {categories_str}."},
+        {"role": "system", "content": system_message},
         {"role": "user", "content": f"Text: '{text}'"}
     ]
-    
+
     response = openai.chat.completions.create(
         model=model,
         messages=messages,
         max_tokens=20,
-        temperature=0.7,
+        temperature=0.5,
         top_p=1.0,
         n=1,
         stop=None
     )
 
     classification = response.choices[0].message.content.strip()
+    write_log_to_file(model, classification_type, system_message, text, classification)
     return classification
 
-def classify_with_gpt_3_5_turbo_few_shot(text, categories):
-    return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo")
-
-def classify_with_gpt_4o_few_shot(text, categories):
-    return classify_inquiry_few_shot(text, categories, model="gpt-4o")
-
-def classify_inquiry_few_shot(text, categories, model):
+def classify_inquiry_few_shot(text, categories, model, classification_type):
     categories_str = ", ".join(categories)
     examples = [
         {"text": "How do I locate my card?", "category": "card_arrival"},
@@ -45,15 +49,12 @@ def classify_inquiry_few_shot(text, categories, model):
         {"text": "Send my card as soon as you are able to.", "category": "card_delivery_estimate"},
         {"text": "What can you do to unblock my pin?", "category": "pin_blocked"}
     ]
-
-    example_messages = []
-    for example in examples:
-        example_messages.append({"role": "user", "content": f"Text: '{example['text']}'"})
-        example_messages.append({"role": "assistant", "content": f"Category: {example['category']}"})
+    
+    examples_str = "\n".join([f"Example {i+1} - Inquiry: '{example['text']}' Answer: '{example['category']}'" for i, example in enumerate(examples)])
+    system_message = f"You are a Customer Service Inquiry classifier. Classify the following Inquiry into one of these categories: {categories_str}. Here are some examples:\n{examples_str}. Respond only with the category name."
     
     messages = [
-        {"role": "system", "content": f"You are a text classifier. Classify the following text into one of these categories: {categories_str}. Here are some examples:"},
-    ] + example_messages + [
+        {"role": "system", "content": system_message},
         {"role": "user", "content": f"Text: '{text}'"}
     ]
     
@@ -61,11 +62,12 @@ def classify_inquiry_few_shot(text, categories, model):
         model=model,
         messages=messages,
         max_tokens=20,
-        temperature=0.7,
+        temperature=0.5,
         top_p=1.0,
         n=1,
         stop=None
     )
 
     classification = response.choices[0].message.content.strip()
+    write_log_to_file(model, classification_type, system_message, text, classification)
     return classification
