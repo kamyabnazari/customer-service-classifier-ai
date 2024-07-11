@@ -6,7 +6,6 @@ from services.evaluation_service import (evaluate_all_results, get_image_downloa
                                          show_classification_report, save_classification_report,
                                          show_class_distribution, save_class_distribution,
                                          show_text_length_analysis, save_text_length_analysis)
-from services.data_service import generate_download_link
 
 # Dictionary for metric explanations
 metric_explanations = {
@@ -40,6 +39,7 @@ if st.button('Evaluate Results'):
                 'Explanation': [metric_explanations[m] for m in ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean']]
             })
             st.dataframe(summary_metrics, use_container_width=True)
+            st.markdown(get_table_download_link(summary_metrics, "summary_metrics_report.tex"), unsafe_allow_html=True)
 
             # Detailed Classification Report
             st.write("**Detailed Classification Report:**")
