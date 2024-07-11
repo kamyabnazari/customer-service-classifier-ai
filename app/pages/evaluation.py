@@ -1,14 +1,11 @@
 # Import necessary packages
-import numpy as np
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-from services.evaluation_service import (evaluate_all_results,
-                                         plot_confusion_matrix,
-                                         plot_classification_report,
-                                         plot_class_distribution,
-                                         plot_text_length_analysis
-                                         )
+from services.evaluation_service import (evaluate_all_results, get_image_download_link, get_table_download_link,
+                                         show_confusion_matrix, save_confusion_matrix,
+                                         show_classification_report, save_classification_report,
+                                         show_class_distribution, save_class_distribution,
+                                         show_text_length_analysis, save_text_length_analysis)
 from services.data_service import generate_download_link
 
 # Dictionary for metric explanations
@@ -43,22 +40,34 @@ if st.button('Evaluate Results'):
                 'Explanation': [metric_explanations[m] for m in ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean']]
             })
             st.dataframe(summary_metrics, use_container_width=True)
-            
+
             # Detailed Classification Report
             st.write("**Detailed Classification Report:**")
             report_df = pd.DataFrame(metrics['classification_report']).transpose()
             st.dataframe(report_df, use_container_width=True)
-            download_link = generate_download_link(report_df, f"classification_report_{file_name}")
-            st.markdown(download_link, unsafe_allow_html=True)
+            st.markdown(get_table_download_link(report_df, "classification_report.tex"), unsafe_allow_html=True)
 
             # Confusion Matrix Visualization
             st.write("**Confusion Matrix:**")
-            plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'])
-
+            show_confusion_matrix(metrics['confusion_matrix'], metrics['labels'])
+            conf_matrix_path = save_confusion_matrix(metrics['confusion_matrix'], metrics['labels'])
+            st.markdown(get_image_download_link(conf_matrix_path, "Download confusion matrix"), unsafe_allow_html=True)
+            
             # Additional Visualizations as discussed
-            plot_classification_report(metrics['classification_report'])
-            plot_class_distribution(metrics['y_true'], metrics['y_pred'])
-            plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'])
+            st.write("**Classification Report:**")
+            show_classification_report(metrics['classification_report'])
+            class_report_path = save_classification_report(metrics['classification_report'])
+            st.markdown(get_image_download_link(class_report_path, "Download classification report"), unsafe_allow_html=True)
+
+            st.write("**Class Distribution:**")
+            show_class_distribution(metrics['y_true'], metrics['y_pred'])
+            class_distribution_path = save_class_distribution(metrics['y_true'], metrics['y_pred'])
+            st.markdown(get_image_download_link(class_distribution_path, "Download class distribution"), unsafe_allow_html=True)
+
+            st.write("**Text Length Analysis:**")
+            show_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'])
+            text_length_path = save_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'])
+            st.markdown(get_image_download_link(text_length_path, "Download text length analysis"), unsafe_allow_html=True)
 
             st.divider()
     else:

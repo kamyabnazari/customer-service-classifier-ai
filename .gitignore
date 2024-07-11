@@ -2,3 +2,4 @@
 *__pycache__
 .env
 /customer_service_classifier_ai_data
+/temp_plots
