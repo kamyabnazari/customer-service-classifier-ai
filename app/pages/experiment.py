@@ -22,22 +22,21 @@ else:
     model_option = st.selectbox("Select a model", ["GPT-3.5 Turbo", "GPT-3.5 Turbo Fine-Tuned", "GPT-4o"])
     method_option = st.selectbox("Select a method", ["Zero-Shot", "Few-Shot"])
 
-    col1, col2 = st.columns([3, 1], vertical_alignment="bottom")
-
-    with col1:
-        # Input field for user to enter their prompt
-        user_input = st.text_input("Enter text to classify:")
+    # Input field for user to enter their prompt
+    user_input = st.text_input("Enter text to classify:")
 
     classification = ""
 
-    with col2:
-        # Extract categories from the dataset
-        if "categories" in global_state.datasets:
-            categories = global_state.datasets["categories"].iloc[:, 0].tolist()
-        else:
-            st.error("Categories not found in the dataset.")
-            st.stop()
+    # Extract categories from the dataset
+    if "categories" in global_state.datasets:
+        categories = global_state.datasets["categories"].iloc[:, 0].tolist()
+    else:
+        st.error("Categories not found in the dataset.")
+        st.stop()
 
+    col1, col2 = st.columns([1, 1], vertical_alignment="bottom")
+
+    with col1:
         # Button to submit the prompt
         if st.button("Classify", use_container_width=True):
             if user_input:
@@ -60,6 +59,7 @@ else:
             else:
                 st.write("Please enter a text to classify.")
 
+    with col2:
         # Button to classify the first 3 samples
         if st.button("Classify First 3 Samples", use_container_width=True):
             classify_test_samples(global_state, model_option, method_option)
