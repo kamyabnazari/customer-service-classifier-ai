@@ -92,7 +92,7 @@ def fine_tune_model(training_file_id, model='gpt-3.5-turbo-0125', n_epochs=4):
         model=model,
         suffix="classifier-model",
         hyperparameters={
-            "n_epochs":1,
+            "n_epochs":2,
             "learning_rate_multiplier":2.0,
             "batch_size": 1
         }
