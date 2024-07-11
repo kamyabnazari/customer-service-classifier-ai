@@ -22,6 +22,7 @@ else:
 
     # Input field for user to enter their prompt
     user_input = st.text_input("Enter text to classify:")
+    true_category = st.text_input("Enter true category (optional):")
 
     classification = ""
 
@@ -38,14 +39,14 @@ else:
             # Generate the response from OpenAI
             if method_option == "Zero-Shot":
                 if model_option == "GPT-3.5 Turbo":
-                    classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option, classification_method="manual")
+                    classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                    classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories, temperature_option, classification_method="manual")
+                    classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
             elif method_option == "Few-Shot":
                 if model_option == "GPT-3.5 Turbo":
-                    classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option, classification_method="manual")
+                    classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                    classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option, classification_method="manual")
+                    classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
         
         # Display the response
         if classification != "":
