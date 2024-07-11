@@ -1,6 +1,12 @@
 import pandas as pd
 from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report, cohen_kappa_score
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+    classification_report,
+    cohen_kappa_score
 )
 import os
 import numpy as np
@@ -45,7 +51,7 @@ def calculate_specificity_fpr(conf_matrix):
     return tn, fp
 
 def evaluate_all_results(results_dir):
-    result_files = os.listdir(results_dir)  # Simplified file listing
+    result_files = os.listdir(results_dir)
     evaluations = {}
     for file_path in result_files:
         metrics = evaluate_classification_results(os.path.join(results_dir, file_path))
