@@ -5,26 +5,24 @@ from sklearn.metrics import (
 import os
 import numpy as np
 
-# Evaluate classification results from a CSV file
 def evaluate_classification_results(csv_file_path):
     df = pd.read_csv(csv_file_path)
     y_true = df['true_category']
     y_pred = df['category']
 
-    # Calculate standard metrics
+    labels = np.unique(np.concatenate((y_true, y_pred)))
     accuracy = accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred, average='weighted', zero_division=0)
     recall = recall_score(y_true, y_pred, average='weighted', zero_division=0)
     f1 = f1_score(y_true, y_pred, average='weighted', zero_division=0)
-    conf_matrix = confusion_matrix(y_true, y_pred, labels=np.unique(y_true))
+    conf_matrix = confusion_matrix(y_true, y_pred, labels=labels)
     class_report = classification_report(y_true, y_pred, output_dict=True, zero_division=0)
     kappa = cohen_kappa_score(y_true, y_pred)
 
-    # Calculate additional metrics such as specificity and FPR
     tn, fp = calculate_specificity_fpr(conf_matrix)
-    specificity = np.mean(tn / (tn + fp))
-    fpr = np.mean(fp / (fp + tn))
-    g_mean = np.sqrt(recall * specificity)  # Adjusted to correctly calculate G-Mean
+    specificity = np.nanmean(tn / (tn + fp))
+    fpr = np.nanmean(fp / (fp + tn))
+    g_mean = np.sqrt(recall * specificity)
 
     metrics = {
         'accuracy': accuracy,
@@ -37,14 +35,13 @@ def evaluate_classification_results(csv_file_path):
         'kappa': kappa,
         'fpr': fpr,
         'g_mean': g_mean,
-        'labels': np.unique(y_true)
+        'labels': labels
     }
     return metrics
 
 def calculate_specificity_fpr(conf_matrix):
-    # Calculates True Negatives and False Positives for Specificity and FPR calculations
-    tn = conf_matrix.sum() - (conf_matrix.sum(axis=0) + conf_matrix.sum(axis=1) - np.diag(conf_matrix))
-    fp = conf_matrix.sum(axis=0) - np.diag(conf_matrix)
+    tn = np.sum(conf_matrix) - np.sum(conf_matrix, axis=0) - np.sum(conf_matrix, axis=1) + np.diag(conf_matrix)
+    fp = np.sum(conf_matrix, axis=0) - np.diag(conf_matrix)
     return tn, fp
 
 def evaluate_all_results(results_dir):
