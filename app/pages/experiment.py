@@ -4,8 +4,6 @@ from services.experiment_service import classify_test_samples
 from services.openai_service import (
     classify_with_gpt_3_5_turbo_zero_shot,
     classify_with_gpt_3_5_turbo_few_shot,
-    classify_with_gpt_4o_zero_shot,
-    classify_with_gpt_4o_few_shot,
     classify_with_gpt_3_5_turbo_fine_zero_shot,
     classify_with_gpt_3_5_turbo_fine_few_shot
 )
@@ -19,7 +17,7 @@ if not st.session_state.get("dataset_loaded", False):
         st.switch_page("pages/home.py")
 else:
     # Select model and method
-    model_option = st.selectbox("Select a model", ["GPT-3.5 Turbo", "GPT-3.5 Turbo Fine-Tuned", "GPT-4o"])
+    model_option = st.selectbox("Select a model", ["GPT-3.5 Turbo", "GPT-3.5 Turbo Fine-Tuned"])
     method_option = st.selectbox("Select a method", ["Zero-Shot", "Few-Shot"])
 
     # Input field for user to enter their prompt
@@ -46,15 +44,11 @@ else:
                         classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories)
                     elif model_option == "GPT-3.5 Turbo Fine-Tuned":
                         classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories)
-                    elif model_option == "GPT-4o":
-                        classification = classify_with_gpt_4o_zero_shot(user_input, categories)
                 elif method_option == "Few-Shot":
                     if model_option == "GPT-3.5 Turbo":
                         classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories)
                     elif model_option == "GPT-3.5 Turbo Fine-Tuned":
                         classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories)
-                    elif model_option == "GPT-4o":
-                        classification = classify_with_gpt_4o_few_shot(user_input, categories)
 
             else:
                 st.write("Please enter a text to classify.")

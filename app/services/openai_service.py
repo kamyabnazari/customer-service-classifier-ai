@@ -8,14 +8,8 @@ openai = OpenAI(api_key=OPENAI_API_KEY)
 def classify_with_gpt_3_5_turbo_zero_shot(text, categories):
     return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo", classification_type="zero_shot")
 
-def classify_with_gpt_4o_zero_shot(text, categories):
-    return classify_inquiry_zero_shot(text, categories, model="gpt-4o", classification_type="zero_shot")
-
 def classify_with_gpt_3_5_turbo_few_shot(text, categories):
     return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo", classification_type="few_shot")
-
-def classify_with_gpt_4o_few_shot(text, categories):
-    return classify_inquiry_few_shot(text, categories, model="gpt-4o", classification_type="few_shot")
 
 def classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories):
     return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_zero_shot")
