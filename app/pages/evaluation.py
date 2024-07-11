@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 from services.evaluation_service import (evaluate_all_results,
                                          plot_confusion_matrix,
                                          plot_classification_report,
-                                         plot_class_distribution
+                                         plot_class_distribution,
+                                         plot_text_length_analysis
                                          )
 from services.data_service import generate_download_link
 
@@ -33,7 +34,7 @@ if st.button('Evaluate Results'):
     if evaluations:
         st.header("Evaluation Metrics for Each Result File")
         for file_name, metrics in evaluations.items():
-            st.subheader(f"Results for: {file_name}")
+            st.write(f"Results for: {file_name}")
             
             # Summary Metrics Table
             summary_metrics = pd.DataFrame({
@@ -57,9 +58,8 @@ if st.button('Evaluate Results'):
             # Additional Visualizations as discussed
             plot_classification_report(metrics['classification_report'])
             plot_class_distribution(metrics['y_true'], metrics['y_pred'])
-            # Ensure you have the 'texts' data available before calling the text length analysis function
-            # plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'])
-            
+            plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'])
+
             st.divider()
     else:
         st.error("No evaluation data found. Please check the directory path and ensure it contains result files.")

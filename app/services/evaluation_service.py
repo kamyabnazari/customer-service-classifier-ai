@@ -43,7 +43,8 @@ def evaluate_classification_results(csv_file_path):
         'kappa': kappa,
         'fpr': np.nanmean(fpr),
         'g_mean': g_mean,
-        'labels': labels
+        'labels': labels,
+        'texts': df['request'].tolist(),
     }
     return metrics
 
@@ -61,11 +62,9 @@ def plot_confusion_matrix(conf_matrix, labels):
     cax = ax.matshow(conf_matrix, cmap='Blues')
     plt.colorbar(cax)
 
-    # Add annotations to each cell
     for (i, j), val in np.ndenumerate(conf_matrix):
         ax.text(j, i, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
 
-    # Fix tick labels issue by setting ticks first
     ax.set_xticks(np.arange(len(labels)))
     ax.set_yticks(np.arange(len(labels)))
     ax.set_xticklabels(labels)
@@ -84,8 +83,7 @@ def plot_classification_report(class_report):
     plt.title('Classification Report')
     plt.xlabel('Classes')
     plt.ylabel('Scores')
-    st.pyplot(fig)  # Show the plot in Streamlit
-
+    st.pyplot(fig)
 def plot_class_distribution(y_true, y_pred):
     actual_counts = pd.Series(y_true).value_counts()
     predicted_counts = pd.Series(y_pred).value_counts()
@@ -95,7 +93,30 @@ def plot_class_distribution(y_true, y_pred):
     plt.title('Class Distribution - Actual vs. Predicted')
     plt.xlabel('Classes')
     plt.ylabel('Frequency')
-    st.pyplot(fig)  # Show the plot in Streamlit
+    st.pyplot(fig)
+
+def plot_text_length_analysis(texts, y_true, y_pred):
+    # Calculate text lengths
+    text_lengths = [len(text.split()) for text in texts]
+    
+    # Determine if classifications are correct
+    is_correct = np.array(y_true) == np.array(y_pred)
+    
+    # Prepare DataFrame for plotting
+    df = pd.DataFrame({
+        'Text Length': text_lengths,
+        'Correct': is_correct
+    })
+    
+    fig, ax = plt.subplots(figsize=(10, 6))
+    df.boxplot(column='Text Length', by='Correct', ax=ax)
+    plt.title('Text Length vs. Classification Correctness')
+    plt.suptitle('')
+    plt.xlabel('Is Classification Correct?')
+    plt.ylabel('Text Length')
+    plt.xticks([1, 2], ['Incorrect', 'Correct'])
+    st.pyplot(fig)
+
 
 def evaluate_all_results(results_dir):
     result_files = os.listdir(results_dir)
