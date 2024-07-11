@@ -8,7 +8,8 @@ settings.set_streamlit()
 pages = [
     st.Page("pages/home.py", title="Home"),
     st.Page("pages/dataset_viewer.py", title="Dataset Viewer"),
-    st.Page("pages/experiment.py", title="Experiment")
+    st.Page("pages/manual_classification.py", title="Manual Classification"),
+    st.Page("pages/automated_classification.py", title="Automated Classification")
 ]
 
 # Display the selected page
