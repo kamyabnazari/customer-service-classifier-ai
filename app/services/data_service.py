@@ -43,3 +43,7 @@ def csv_to_jsonl(csv_file_path, jsonl_file_path, system_message):
                 ]
             }
             jsonl_file.write(json.dumps(jsonl_obj) + "\n")
+
+def list_jsonl_files(directory):
+    """List all JSONL files in the specified directory."""
+    return [f for f in os.listdir(directory) if f.endswith('.jsonl')]

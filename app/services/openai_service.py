@@ -6,16 +6,16 @@ from .logging_service import write_log_to_file, write_results_to_csv
 openai = OpenAI(api_key=OPENAI_API_KEY)
 
 def classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature, classification_method):
-    return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo", classification_type="zero_shot", temperature=temperature, classification_method=classification_method)
+    return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo-0125", classification_type="zero_shot", temperature=temperature, classification_method=classification_method)
 
 def classify_with_gpt_3_5_turbo_few_shot(text, categories, temperature, classification_method):
-    return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo", classification_type="few_shot", temperature=temperature,classification_method=classification_method)
+    return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo-0125", classification_type="few_shot", temperature=temperature,classification_method=classification_method)
 
 def classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature, classification_method):
-    return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_zero_shot", temperature=temperature,classification_method=classification_method)
+    return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo-0125", classification_type="fine_zero_shot", temperature=temperature,classification_method=classification_method)
 
 def classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature, classification_method):
-    return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_few_shot", temperature=temperature,classification_method=classification_method)
+    return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo-0125", classification_type="fine_few_shot", temperature=temperature,classification_method=classification_method)
 
 def classify_inquiry_zero_shot(text, categories, model, classification_type, temperature, classification_method):
     categories_str = ", ".join(categories)
@@ -77,3 +77,32 @@ def classify_inquiry_few_shot(text, categories, model, classification_type, temp
     write_log_to_file(model, classification_type, classification_method, temperature, system_message, text, classification, usage)
     write_results_to_csv(model, classification_type, classification_method, temperature, text, classification, usage)
     return classification
+
+def upload_file_to_openai(file_path):
+    with open(file_path, 'rb') as file:
+        response = openai.files.create(
+            file=file,
+            purpose='fine-tune'
+        )
+    return response
+
+def fine_tune_model(training_file_id, model='gpt-3.5-turbo-0125', n_epochs=4):
+    response = openai.fine_tuning.jobs.create(
+        training_file=training_file_id,
+        model=model,
+        suffix="classifier-model"
+    )
+    return response
+
+def get_fine_tune_status(fine_tuning_job_id):
+    response = openai.fine_tuning.jobs.retrieve(fine_tuning_job_id=fine_tuning_job_id)
+    return response
+
+def list_fine_tune_jobs():
+    response = openai.fine_tuning.jobs.list()
+    return response.data
+
+def delete_all_files():
+    files = openai.files.list().data
+    for file in files:
+        openai.files.delete(file.id)

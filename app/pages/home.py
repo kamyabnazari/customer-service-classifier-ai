@@ -52,12 +52,12 @@ with col2:
             st.success("Dataset deleted successfully!")
             st.rerun()
 
-st.divider()
-
-col1, col2, col3 = st.columns([1, 1, 1])
-
 # Display a sample of the loaded data
 if global_state.datasets:
+    st.divider()
+
+    col1, col2, col3 = st.columns([1, 1, 1])
+
     with col1:
         if "test" in global_state.datasets:
             st.metric(label="Total Test Elements", value=len(global_state.datasets["test"]))
@@ -69,5 +69,3 @@ if global_state.datasets:
     with col3:
         if "categories" in global_state.datasets:
             st.metric(label="Total Category Elements", value=len(global_state.datasets["categories"]))
-
-    st.divider()
