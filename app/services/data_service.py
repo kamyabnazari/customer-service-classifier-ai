@@ -48,7 +48,6 @@ def list_jsonl_files(directory):
     """List all JSONL files in the specified directory."""
     return [f for f in os.listdir(directory) if f.endswith('.jsonl')]
 
-
 def get_csv_file_path(model, classification_type, classification_method, temperature):
     base_results_dir = './customer_service_classifier_ai_data/results'
 
@@ -59,3 +58,11 @@ def get_csv_file_path(model, classification_type, classification_method, tempera
 def check_results_exist(model, classification_type, temperature, classification_method):
     csv_file_path = get_csv_file_path(model, classification_type, classification_method, temperature)
     return os.path.isfile(csv_file_path)
+
+def list_result_files(results_dir):
+    result_files = []
+    for root, dirs, files in os.walk(results_dir):
+        for file in files:
+            if file.endswith('.csv'):
+                result_files.append(os.path.join(root, file))
+    return result_files

@@ -10,7 +10,8 @@ pages = [
     st.Page("pages/dataset_viewer.py", title="Dataset Viewer"),
     st.Page("pages/manual_classification.py", title="Manual Classification"),
     st.Page("pages/automated_classification.py", title="Automated Classification"),
-    st.Page("pages/utility_tools.py", title="Utility Tools")
+    st.Page("pages/utility_tools.py", title="Utility Tools"),
+    st.Page("pages/evaluation.py", title="Evaluation"),
 ]
 
 # Display the selected page
