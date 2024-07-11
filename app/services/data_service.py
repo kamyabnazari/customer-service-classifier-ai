@@ -3,8 +3,6 @@ import os
 import csv
 import json
 
-base_results_dir = './customer_service_classifier_ai_data/results'
-
 def list_datasets(data_dir: str) -> list:
     """List all dataset folders in the specified data directory, ignoring folders ending with '_generated'."""
     return [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d)) and not d.endswith('_generated')]
@@ -50,10 +48,11 @@ def list_jsonl_files(directory):
     """List all JSONL files in the specified directory."""
     return [f for f in os.listdir(directory) if f.endswith('.jsonl')]
 
+
 def get_csv_file_path(model, classification_type, classification_method, temperature):
-    results_dir = os.path.join(base_results_dir, classification_method, model)
-    if not os.path.exists(results_dir):
-        os.makedirs(results_dir)
+    base_results_dir = './customer_service_classifier_ai_data/results'
+
+    results_dir = os.path.join(base_results_dir, classification_method)
     csv_file_name = f'classification_results_{model}_{classification_type}_{temperature}.csv'
     return os.path.join(results_dir, csv_file_name)
 

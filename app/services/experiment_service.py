@@ -33,7 +33,6 @@ def classify_test_samples(global_state, model_option, method_option, temperature
             if method_option == "No Prompting":
                 if model_option == "GPT-3.5 Turbo Fine-Tuned":
                     classify_with_gpt_3_5_turbo_fine_no_prompting(text, temperature, classification_method)
-
             if method_option == "Zero-Shot":
                 if model_option == "GPT-3.5 Turbo":
                     classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature, classification_method)
