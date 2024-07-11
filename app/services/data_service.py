@@ -1,3 +1,5 @@
+import base64
+import io
 import pandas as pd
 import os
 import csv
@@ -66,3 +68,11 @@ def list_result_files(results_dir):
             if file.endswith('.csv'):
                 result_files.append(os.path.join(root, file))
     return result_files
+
+def generate_download_link(data, file_name):
+    buffer = io.StringIO()
+    data.to_csv(buffer, index=True)
+    buffer.seek(0)
+    b64 = base64.b64encode(buffer.getvalue().encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}.csv">Download CSV</a>'
+    return href
