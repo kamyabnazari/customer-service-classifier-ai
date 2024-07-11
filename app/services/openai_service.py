@@ -17,6 +17,9 @@ def classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature, cl
 def classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature, classification_method):
     return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9jq8ioDW", classification_type="fine_few_shot", temperature=temperature,classification_method=classification_method)
 
+def classify_with_gpt_3_5_turbo_fine_no_prompting(text, temperature, classification_method):
+    return classify_inquiry_no_prompting(text, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9jq8ioDW", classification_type="fine_few_shot", temperature=temperature,classification_method=classification_method)
+
 def classify_inquiry_zero_shot(text, categories, model, classification_type, temperature, classification_method):
     categories_str = ", ".join(categories)
     system_message = f"You are a Customer Service Inquiry classifier. Classify the following Inquiry into one of these categories: {categories_str}. Respond only with the category name."
@@ -31,7 +34,6 @@ def classify_inquiry_zero_shot(text, categories, model, classification_type, tem
         messages=messages,
         max_tokens=20,
         temperature=temperature,
-        top_p=1.0,
         n=1,
         stop=None
     )
@@ -66,7 +68,30 @@ def classify_inquiry_few_shot(text, categories, model, classification_type, temp
         messages=messages,
         max_tokens=20,
         temperature=temperature,
-        top_p=1.0,
+        n=1,
+        stop=None
+    )
+
+    classification = response.choices[0].message.content.strip()
+    usage = response.usage
+
+    write_log_to_file(model, classification_type, classification_method, temperature, system_message, text, classification, usage)
+    write_results_to_csv(model, classification_type, classification_method, temperature, text, classification, usage)
+    return classification
+
+def classify_inquiry_no_prompting(text, model, classification_type, temperature, classification_method):  
+    system_message = f"Classify the following Inquiry respond only with the category name."
+    
+    messages = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": f"Text: '{text}'"}
+    ]
+    
+    response = openai.chat.completions.create(
+        model=model,
+        messages=messages,
+        max_tokens=20,
+        temperature=temperature,
         n=1,
         stop=None
     )

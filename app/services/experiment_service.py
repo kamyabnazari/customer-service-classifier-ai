@@ -3,7 +3,8 @@ from services.openai_service import (
     classify_with_gpt_3_5_turbo_zero_shot,
     classify_with_gpt_3_5_turbo_few_shot,
     classify_with_gpt_3_5_turbo_fine_zero_shot,
-    classify_with_gpt_3_5_turbo_fine_few_shot
+    classify_with_gpt_3_5_turbo_fine_few_shot,
+    classify_with_gpt_3_5_turbo_fine_no_prompting
 )
 
 def classify_test_samples(global_state, model_option, method_option, temperature, classification_method):
@@ -29,6 +30,10 @@ def classify_test_samples(global_state, model_option, method_option, temperature
         for index, row in samples.iterrows():
             text = row["text"]
             
+            if method_option == "No Prompting":
+                if model_option == "GPT-3.5 Turbo Fine-Tuned":
+                    classify_with_gpt_3_5_turbo_fine_no_prompting(text, temperature, classification_method)
+
             if method_option == "Zero-Shot":
                 if model_option == "GPT-3.5 Turbo":
                     classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature, classification_method)
