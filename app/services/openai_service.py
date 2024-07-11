@@ -43,8 +43,10 @@ def classify_inquiry_zero_shot(text, categories, model, classification_type):
     )
 
     classification = response.choices[0].message.content.strip()
-    write_log_to_file(model, classification_type, system_message, text, classification)
-    write_results_to_csv(model, classification_type, text, classification)
+    usage = response.usage
+
+    write_log_to_file(model, classification_type, system_message, text, classification, usage)
+    write_results_to_csv(model, classification_type, text, classification, usage)
     return classification
 
 def classify_inquiry_few_shot(text, categories, model, classification_type):
@@ -76,6 +78,8 @@ def classify_inquiry_few_shot(text, categories, model, classification_type):
     )
 
     classification = response.choices[0].message.content.strip()
-    write_log_to_file(model, classification_type, system_message, text, classification)
-    write_results_to_csv(model, classification_type, text, classification)
+    usage = response.usage
+
+    write_log_to_file(model, classification_type, system_message, text, classification, usage)
+    write_results_to_csv(model, classification_type, text, classification, usage)
     return classification
