@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import csv
+import json
 
 def list_datasets(data_dir: str) -> list:
     """List all dataset folders in the specified data directory."""
@@ -28,3 +30,16 @@ def load_datasets(selected_dataset, data_dir):
         elif file_name == 'categories.csv':
             datasets["categories"] = pd.DataFrame(data)
     return datasets
+
+def csv_to_jsonl(csv_file_path, jsonl_file_path, system_message):
+    with open(csv_file_path, mode='r') as csv_file, open(jsonl_file_path, mode='w') as jsonl_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            jsonl_obj = {
+                "messages": [
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": row["text"]},
+                    {"role": "assistant", "content": row["category"]}
+                ]
+            }
+            jsonl_file.write(json.dumps(jsonl_obj) + "\n")

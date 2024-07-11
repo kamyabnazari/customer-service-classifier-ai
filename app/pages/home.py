@@ -1,5 +1,6 @@
 import streamlit as st
-from services.data_service import list_datasets, load_datasets
+import os
+from services.data_service import list_datasets, load_datasets, csv_to_jsonl
 from state import global_state
 
 # Set page title
@@ -15,6 +16,8 @@ datasets = list_datasets(data_dir)
 
 # Capitalize the first letter of each dataset name
 datasets_capitalized = [dataset.capitalize() for dataset in datasets]
+
+st.header("Importing Datasets")
 
 col1, col2 = st.columns([3, 1], vertical_alignment="bottom")
 
@@ -62,3 +65,24 @@ if global_state.datasets:
     with col3:
         if "categories" in global_state.datasets:
             st.metric(label="Total Category Elements", value=len(global_state.datasets["categories"]))
+
+    st.divider()
+
+# Laden der CSV in JSONL-Konvertierungslogik
+st.header("Preparing Fine Tuning")
+
+# Pfade für CSV und JSONL Dateien
+csv_file_path = './data/banking/fine_tuning.csv'
+jsonl_file_path = './data/banking/fine_tuning.jsonl'
+
+# Überprüfen, ob die JSONL-Datei bereits existiert
+jsonl_file_exists = os.path.isfile(jsonl_file_path)
+
+if st.button("Convert CSV to JSONL", disabled=jsonl_file_exists, use_container_width=True):
+    csv_to_jsonl(csv_file_path, jsonl_file_path, "You are a Customer Service Inquiry classifier.")
+    st.success(f"CSV file successfully converted to JSONL and saved to {jsonl_file_path}.")
+    st.experimental_rerun()
+
+# Nachricht anzeigen, wenn die JSONL-Datei bereits existiert
+if jsonl_file_exists:
+    st.info(f"JSONL file already exists at {jsonl_file_path}.")
