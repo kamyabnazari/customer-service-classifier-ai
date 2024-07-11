@@ -6,13 +6,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    confusion_matrix,
-    classification_report,
-    cohen_kappa_score
+    accuracy_score, precision_score, recall_score, f1_score,
+    confusion_matrix, classification_report, cohen_kappa_score
 )
 
 # Configure Matplotlib to use LaTeX for rendering
@@ -44,10 +39,12 @@ def compute_metrics(df, y_true, y_pred, labels):
     g_mean = np.sqrt(recall * np.nanmean(specificity))
     texts = df['request'].tolist()
     
-    return {'y_true': y_true, 'y_pred': y_pred, 'accuracy': accuracy, 'precision': precision, 'recall': recall,
-            'f1_score': f1, 'confusion_matrix': conf_matrix, 'classification_report': class_report,
-            'specificity': np.nanmean(specificity), 'kappa': kappa, 'fpr': np.nanmean(fpr), 'g_mean': g_mean,
-            'labels': labels, 'texts': texts}
+    return {
+        'y_true': y_true, 'y_pred': y_pred, 'accuracy': accuracy, 'precision': precision, 'recall': recall,
+        'f1_score': f1, 'confusion_matrix': conf_matrix, 'classification_report': class_report,
+        'specificity': np.nanmean(specificity), 'kappa': kappa, 'fpr': np.nanmean(fpr), 'g_mean': g_mean,
+        'labels': labels, 'texts': texts
+    }
 
 def calculate_specificity_fpr(conf_matrix):
     tn = np.sum(conf_matrix) - np.sum(conf_matrix, axis=0) - np.sum(conf_matrix, axis=1) + np.diag(conf_matrix)
@@ -80,7 +77,8 @@ def get_table_download_link(df, filename="data_table.tex", caption="Download LaT
     href = f'<a href="data:file/tex;base64,{b64}" download="{filename}">{caption}</a>'
     return href
 
-def show_confusion_matrix(conf_matrix, labels):
+def plot_confusion_matrix(conf_matrix, labels, save=False):
+    path = get_plot_path('confusion_matrix.pgf') if save else None
     fig, ax = plt.subplots()
     cax = ax.matshow(conf_matrix, cmap='Blues')
     plt.colorbar(cax)
@@ -93,28 +91,16 @@ def show_confusion_matrix(conf_matrix, labels):
     plt.xlabel('Predicted')
     plt.ylabel('True')
     plt.title('Confusion Matrix')
-    st.pyplot(fig)
-    plt.close(fig)
+    if save:
+        plt.savefig(path)
+        plt.close(fig)
+        return path
+    else:
+        st.pyplot(fig)
+        plt.close(fig)
 
-def save_confusion_matrix(conf_matrix, labels):
-    path = get_plot_path('confusion_matrix.pgf')
-    fig, ax = plt.subplots()
-    cax = ax.matshow(conf_matrix, cmap='Blues')
-    plt.colorbar(cax)
-    for (i, j), val in np.ndenumerate(conf_matrix):
-        ax.text(j, i, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
-    ax.set_xticks(np.arange(len(labels)))
-    ax.set_yticks(np.arange(len(labels)))
-    ax.set_xticklabels(labels)
-    ax.set_yticklabels(labels)
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
-    plt.title('Confusion Matrix')
-    plt.savefig(path)
-    plt.close(fig)
-    return path
-
-def show_classification_report(class_report):
+def plot_classification_report(class_report, save=False):
+    path = get_plot_path('classification_report.pgf') if save else None
     report_df = pd.DataFrame(class_report).transpose()
     report_df.drop(['support'], axis=1, inplace=True)
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -122,23 +108,16 @@ def show_classification_report(class_report):
     plt.title('Classification Report')
     plt.xlabel('Classes')
     plt.ylabel('Scores')
-    st.pyplot(fig)
-    plt.close(fig)
+    if save:
+        plt.savefig(path)
+        plt.close(fig)
+        return path
+    else:
+        st.pyplot(fig)
+        plt.close(fig)
 
-def save_classification_report(class_report):
-    path = get_plot_path('classification_report.pgf')
-    report_df = pd.DataFrame(class_report).transpose()
-    report_df.drop(['support'], axis=1, inplace=True)
-    fig, ax = plt.subplots(figsize=(10, 5))
-    report_df.plot(kind='bar', ax=ax)
-    plt.title('Classification Report')
-    plt.xlabel('Classes')
-    plt.ylabel('Scores')
-    plt.savefig(path)
-    plt.close(fig)
-    return path
-
-def show_class_distribution(y_true, y_pred):
+def plot_class_distribution(y_true, y_pred, save=False):
+    path = get_plot_path('class_distribution.pgf') if save else None
     actual_counts = pd.Series(y_true).value_counts()
     predicted_counts = pd.Series(y_pred).value_counts()
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -147,24 +126,16 @@ def show_class_distribution(y_true, y_pred):
     plt.title('Class Distribution - Actual vs. Predicted')
     plt.xlabel('Classes')
     plt.ylabel('Frequency')
-    st.pyplot(fig)
-    plt.close(fig)
+    if save:
+        plt.savefig(path)
+        plt.close(fig)
+        return path
+    else:
+        st.pyplot(fig)
+        plt.close(fig)
 
-def save_class_distribution(y_true, y_pred):
-    path = get_plot_path('class_distribution.pgf')
-    actual_counts = pd.Series(y_true).value_counts()
-    predicted_counts = pd.Series(y_pred).value_counts()
-    fig, ax = plt.subplots(figsize=(10, 5))
-    df = pd.DataFrame({'Actual': actual_counts, 'Predicted': predicted_counts}).fillna(0)
-    df.plot(kind='bar', ax=ax)
-    plt.title('Class Distribution - Actual vs. Predicted')
-    plt.xlabel('Classes')
-    plt.ylabel('Frequency')
-    plt.savefig(path)
-    plt.close(fig)
-    return path
-
-def show_text_length_analysis(texts, y_true, y_pred):
+def plot_text_length_analysis(texts, y_true, y_pred, save=False):
+    path = get_plot_path('text_length_analysis.pgf') if save else None
     text_lengths = [len(text.split()) for text in texts]
     is_correct = np.array(y_true) == np.array(y_pred)
     df = pd.DataFrame({'Text Length': text_lengths, 'Correct': is_correct})
@@ -174,23 +145,13 @@ def show_text_length_analysis(texts, y_true, y_pred):
     plt.xlabel('Is Classification Correct?')
     plt.ylabel('Text Length')
     plt.xticks([1, 2], ['Incorrect', 'Correct'])
-    st.pyplot(fig)
-    plt.close(fig)
-
-def save_text_length_analysis(texts, y_true, y_pred):
-    path = get_plot_path('text_length_analysis.pgf')
-    text_lengths = [len(text.split()) for text in texts]
-    is_correct = np.array(y_true) == np.array(y_pred)
-    df = pd.DataFrame({'Text Length': text_lengths, 'Correct': is_correct})
-    fig, ax = plt.subplots(figsize=(10, 6))
-    df.boxplot(column='Text Length', by='Correct', ax=ax)
-    plt.title('Text Length vs. Classification Correctness')
-    plt.xlabel('Is Classification Correct?')
-    plt.ylabel('Text Length')
-    plt.xticks([1, 2], ['Incorrect', 'Correct'])
-    plt.savefig(path)
-    plt.close(fig)
-    return path
+    if save:
+        plt.savefig(path)
+        plt.close(fig)
+        return path
+    else:
+        st.pyplot(fig)
+        plt.close(fig)
 
 def evaluate_all_results(results_dir):
     result_files = os.listdir(results_dir)
