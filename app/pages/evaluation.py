@@ -1,8 +1,8 @@
 import base64
+import numpy as np
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 from services.evaluation_service import evaluate_all_results
 import io
 
@@ -17,7 +17,7 @@ def generate_download_link(data, file_name):
     buffer = io.StringIO()
     data.to_csv(buffer, index=True)
     buffer.seek(0)
-    b64 = base64.b64encode(buffer.getvalue().encode()).decode()  # some strings
+    b64 = base64.b64encode(buffer.getvalue().encode()).decode()
     href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}.csv">Download CSV</a>'
     return href
 
@@ -34,9 +34,18 @@ for file_name, metrics in evaluations.items():
 
     st.write("**Confusion Matrix:**")
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(metrics['confusion_matrix'], annot=True, fmt='d', cmap='Blues', xticklabels=metrics['classification_report'].keys(), yticklabels=metrics['classification_report'].keys(), ax=ax)
-    ax.set_xlabel('Predicted')
-    ax.set_ylabel('True')
+    cax = ax.matshow(metrics['confusion_matrix'], cmap='Blues')
+    plt.colorbar(cax)
+    ax.set_xticks(range(len(metrics['labels'])))
+    ax.set_yticks(range(len(metrics['labels'])))
+    ax.set_xticklabels(metrics['labels'], rotation=45, ha='right')
+    ax.set_yticklabels(metrics['labels'])
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+
+    for (i, j), val in np.ndenumerate(metrics['confusion_matrix']):
+        ax.text(j, i, f'{val}', ha='center', va='center', color='white' if val > metrics['confusion_matrix'].max()/2 else 'black')
+
     st.pyplot(fig)
 
     st.write("**Detailed Classification Report:**")

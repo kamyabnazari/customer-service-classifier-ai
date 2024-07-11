@@ -15,7 +15,7 @@ def evaluate_classification_results(csv_file_path):
     precision = precision_score(y_true, y_pred, average='weighted', zero_division=0)
     recall = recall_score(y_true, y_pred, average='weighted', zero_division=0)
     f1 = f1_score(y_true, y_pred, average='weighted', zero_division=0)
-    conf_matrix = confusion_matrix(y_true, y_pred)
+    conf_matrix = confusion_matrix(y_true, y_pred, labels=np.unique(y_true))
     class_report = classification_report(y_true, y_pred, output_dict=True, zero_division=0)
     kappa = cohen_kappa_score(y_true, y_pred)
 
@@ -43,7 +43,8 @@ def evaluate_classification_results(csv_file_path):
         'specificity': specificity.mean(),
         'kappa': kappa,
         'fpr': fpr.mean(),
-        'g_mean': g_mean
+        'g_mean': g_mean,
+        'labels': np.unique(y_true)
     }
     return metrics
 
