@@ -90,7 +90,12 @@ def fine_tune_model(training_file_id, model='gpt-3.5-turbo-0125', n_epochs=4):
     response = openai.fine_tuning.jobs.create(
         training_file=training_file_id,
         model=model,
-        suffix="classifier-model"
+        suffix="classifier-model",
+        hyperparameters={
+            "n_epochs":1,
+            "learning_rate_multiplier":2.0,
+            "batch_size": 1
+        }
     )
     return response
 
