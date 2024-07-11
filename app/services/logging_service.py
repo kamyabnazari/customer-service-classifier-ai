@@ -7,11 +7,10 @@ base_log_dir = './customer_service_classifier_ai_data/logs'
 base_results_dir = './customer_service_classifier_ai_data/results'
 
 def get_log_file_path(model, classification_type, classification_method, temperature):
-    current_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     log_dir = os.path.join(base_log_dir, classification_method, model)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-    log_file_name = f'classification_logs_{model}_{classification_type}_{temperature}_{current_date}.txt'
+    log_file_name = f'classification_logs_{model}_{classification_type}_{temperature}.txt'
     return os.path.join(log_dir, log_file_name)
 
 def write_log_to_file(model, classification_type, classification_method, temperature, system_message, input_text, classification, usage):
@@ -32,11 +31,10 @@ def write_log_to_file(model, classification_type, classification_method, tempera
         log_file.write(log_message)
 
 def get_csv_file_path(model, classification_type, classification_method, temperature):
-    current_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     results_dir = os.path.join(base_results_dir, classification_method, model)
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
-    csv_file_name = f'classification_results_{model}_{classification_type}_{temperature}_{current_date}.csv'
+    csv_file_name = f'classification_results_{model}_{classification_type}_{temperature}.csv'
     return os.path.join(results_dir, csv_file_name)
 
 def write_results_to_csv(model, classification_type, classification_method, temperature, input_text, classification, usage):
