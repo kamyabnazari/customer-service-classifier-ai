@@ -5,19 +5,19 @@ from .logging_service import write_log_to_file, write_results_to_csv
 # Set up the OpenAI API client
 openai = OpenAI(api_key=OPENAI_API_KEY)
 
-def classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature):
-    return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo", classification_type="zero_shot", temperature=temperature)
+def classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature, classification_method):
+    return classify_inquiry_zero_shot(text, categories, model="gpt-3.5-turbo", classification_type="zero_shot", temperature=temperature, classification_method=classification_method)
 
-def classify_with_gpt_3_5_turbo_few_shot(text, categories, temperature):
-    return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo", classification_type="few_shot", temperature=temperature)
+def classify_with_gpt_3_5_turbo_few_shot(text, categories, temperature, classification_method):
+    return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo", classification_type="few_shot", temperature=temperature,classification_method=classification_method)
 
-def classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature):
-    return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_zero_shot", temperature=temperature)
+def classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature, classification_method):
+    return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_zero_shot", temperature=temperature,classification_method=classification_method)
 
-def classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature):
-    return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_few_shot", temperature=temperature)
+def classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature, classification_method):
+    return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo", classification_type="fine_few_shot", temperature=temperature,classification_method=classification_method)
 
-def classify_inquiry_zero_shot(text, categories, model, classification_type, temperature):
+def classify_inquiry_zero_shot(text, categories, model, classification_type, temperature, classification_method):
     categories_str = ", ".join(categories)
     system_message = f"You are a Customer Service Inquiry classifier. Classify the following Inquiry into one of these categories: {categories_str}. Respond only with the category name."
     
@@ -39,11 +39,11 @@ def classify_inquiry_zero_shot(text, categories, model, classification_type, tem
     classification = response.choices[0].message.content.strip()
     usage = response.usage
 
-    write_log_to_file(model, classification_type, "manual", temperature, system_message, text, classification, usage)
-    write_results_to_csv(model, classification_type, "manual", temperature, text, classification, usage)
+    write_log_to_file(model, classification_type, classification_method, temperature, system_message, text, classification, usage)
+    write_results_to_csv(model, classification_type, classification_method, temperature, text, classification, usage)
     return classification
 
-def classify_inquiry_few_shot(text, categories, model, classification_type, temperature):
+def classify_inquiry_few_shot(text, categories, model, classification_type, temperature, classification_method):
     categories_str = ", ".join(categories)
     examples = [
         {"text": "How do I locate my card?", "category": "card_arrival"},
@@ -74,6 +74,6 @@ def classify_inquiry_few_shot(text, categories, model, classification_type, temp
     classification = response.choices[0].message.content.strip()
     usage = response.usage
 
-    write_log_to_file(model, classification_type, "manual", temperature, system_message, text, classification, usage)
-    write_results_to_csv(model, classification_type, "manual", temperature, text, classification, usage)
+    write_log_to_file(model, classification_type, classification_method, temperature, system_message, text, classification, usage)
+    write_results_to_csv(model, classification_type, classification_method, temperature, text, classification, usage)
     return classification

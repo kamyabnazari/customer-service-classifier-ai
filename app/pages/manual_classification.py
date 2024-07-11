@@ -38,16 +38,14 @@ else:
             # Generate the response from OpenAI
             if method_option == "Zero-Shot":
                 if model_option == "GPT-3.5 Turbo":
-                    classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option)
+                    classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option, classification_method="manual")
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                    classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories, temperature_option)
+                    classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories, temperature_option, classification_method="manual")
             elif method_option == "Few-Shot":
                 if model_option == "GPT-3.5 Turbo":
-                    classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option)
+                    classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option, classification_method="manual")
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                    classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option)
-            
-            st.success(f"Classification: {classification}")
+                    classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option, classification_method="manual")
         else:
             st.write("Please enter a text to classify.")
 

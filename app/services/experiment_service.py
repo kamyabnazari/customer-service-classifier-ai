@@ -6,7 +6,7 @@ from services.openai_service import (
     classify_with_gpt_3_5_turbo_fine_few_shot
 )
 
-def classify_test_samples(global_state, model_option, method_option, temperature):
+def classify_test_samples(global_state, model_option, method_option, temperature, classification_method):
     if "test" in global_state.datasets:
         test_data = global_state.datasets["test"]
         
@@ -31,14 +31,14 @@ def classify_test_samples(global_state, model_option, method_option, temperature
             
             if method_option == "Zero-Shot":
                 if model_option == "GPT-3.5 Turbo":
-                    classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature)
+                    classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature, classification_method)
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                    classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature)
+                    classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature, classification_method)
             elif method_option == "Few-Shot":
                 if model_option == "GPT-3.5 Turbo":
-                    classify_with_gpt_3_5_turbo_few_shot(text, categories, temperature)
+                    classify_with_gpt_3_5_turbo_few_shot(text, categories, temperature, classification_method)
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                    classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature)
+                    classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature, classification_method)
 
             # Update progress bar and text
             progress_percentage = (index + 1) / len(samples)
