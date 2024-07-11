@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 from services.openai_service import (
     classify_with_gpt_3_5_turbo_zero_shot,
     classify_with_gpt_3_5_turbo_few_shot,
@@ -8,7 +7,6 @@ from services.openai_service import (
     classify_with_gpt_3_5_turbo_fine_zero_shot,
     classify_with_gpt_3_5_turbo_fine_few_shot
 )
-from services.logging_service import write_results_to_csv
 
 def classify_test_samples(global_state, model_option, method_option):
     if "test" in global_state.datasets:
@@ -45,6 +43,5 @@ def classify_test_samples(global_state, model_option, method_option):
                 elif model_option == "GPT-4o":
                     classification = classify_with_gpt_4o_few_shot(text, categories)
             
-            write_results_to_csv(model_option, method_option, text, classification)
     else:
         raise ValueError("Test dataset not loaded in global state.")
