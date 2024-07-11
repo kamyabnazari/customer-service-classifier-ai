@@ -32,30 +32,24 @@ else:
         st.error("Categories not found in the dataset.")
         st.stop()
 
-    col1, col2 = st.columns([1, 1])
-
-    with col1:
-        # Button to submit the prompt
-        if st.button("Classify", use_container_width=True):
-            if user_input:
-                # Generate the response from OpenAI
-                if method_option == "Zero-Shot":
-                    if model_option == "GPT-3.5 Turbo":
-                        classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option)
-                    elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                        classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories, temperature_option)
-                elif method_option == "Few-Shot":
-                    if model_option == "GPT-3.5 Turbo":
-                        classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option)
-                    elif model_option == "GPT-3.5 Turbo Fine-Tuned":
-                        classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option)
-
-            else:
-                st.write("Please enter a text to classify.")
-
-    # Display the response
-    if classification != "":
-        st.write(f"Classification: {classification}")
+    # Button to submit the prompt
+    if st.button("Classify", use_container_width=True):
+        if user_input:
+            # Generate the response from OpenAI
+            if method_option == "Zero-Shot":
+                if model_option == "GPT-3.5 Turbo":
+                    classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option)
+                elif model_option == "GPT-3.5 Turbo Fine-Tuned":
+                    classification = classify_with_gpt_3_5_turbo_fine_zero_shot(user_input, categories, temperature_option)
+            elif method_option == "Few-Shot":
+                if model_option == "GPT-3.5 Turbo":
+                    classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option)
+                elif model_option == "GPT-3.5 Turbo Fine-Tuned":
+                    classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option)
+            
+            st.success(f"Classification: {classification}")
+        else:
+            st.write("Please enter a text to classify.")
 
     st.divider()
 
