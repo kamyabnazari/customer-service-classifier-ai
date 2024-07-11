@@ -106,8 +106,3 @@ def get_fine_tune_status(fine_tuning_job_id):
 def list_fine_tune_jobs():
     response = openai.fine_tuning.jobs.list()
     return response.data
-
-def delete_all_files():
-    files = openai.files.list().data
-    for file in files:
-        openai.files.delete(file.id)

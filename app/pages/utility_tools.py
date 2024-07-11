@@ -2,7 +2,7 @@ from openai import OpenAI
 from config import OPENAI_API_KEY
 import streamlit as st
 from services.data_service import csv_to_jsonl, list_jsonl_files
-from services.openai_service import delete_all_files, list_fine_tune_jobs, upload_file_to_openai, fine_tune_model, get_fine_tune_status
+from services.openai_service import list_fine_tune_jobs, upload_file_to_openai, fine_tune_model, get_fine_tune_status
 import os
 
 # Set up the OpenAI API client
@@ -102,12 +102,3 @@ else:
                     st.success(f"Fine-tune status: {status}")
             except Exception as e:
                 st.error(f"Failed to retrieve fine-tune status: {e}")
-
-    st.header("Delete all Files from OpenAI")
-
-    if st.button("Delete All Files", use_container_width=True):
-        try:
-            delete_all_files()
-            st.success("All files deleted from OpenAI!")
-        except Exception as e:
-            st.error(f"Failed to delete files from OpenAI: {e}")
