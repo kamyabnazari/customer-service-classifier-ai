@@ -5,7 +5,7 @@ from services.evaluation_service import evaluate_all_results
 
 st.title("Evaluation")
 
-results_dir = './customer_service_classifier_ai_data/results'
+results_dir = './customer_service_classifier_ai_data/results/automated'
 evaluations = evaluate_all_results(results_dir)
 
 st.header("Evaluation Metrics for Each Result File")
