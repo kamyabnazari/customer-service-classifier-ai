@@ -68,7 +68,11 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
     # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    new_filename = f"figure-{filename.replace('.pgf', '')}-{clean_name}.pgf"
+    # Ensure all underscores are replaced with hyphens
+    clean_name = clean_name.replace("_", "-")
+    # Remove repeating hyphens
+    clean_name = '-'.join(filter(None, clean_name.split('-')))
+    new_filename = f"figure-{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}.pgf"
     path = os.path.join(directory, new_filename)
 
     # Save the figure
@@ -86,7 +90,11 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     """Convert DataFrame to LaTeX and create a download link with a unique file name."""
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    new_filename = f"table-{filename.replace('.tex', '')}-{clean_name}.tex"
+    # Ensure all underscores are replaced with hyphens
+    clean_name = clean_name.replace("_", "-")
+    # Remove repeating hyphens
+    clean_name = '-'.join(filter(None, clean_name.split('-')))
+    new_filename = f"table-{filename.replace('.tex', '').replace('_', '-')}-{clean_name}.tex"
     
     latex_str = df.to_latex(index=False)
     b64 = base64.b64encode(latex_str.encode()).decode("utf-8")
