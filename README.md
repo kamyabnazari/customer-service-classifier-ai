@@ -87,7 +87,7 @@ streamlit run app/main.py
 
 ### License
 
-This project is licensed under the [Attribution 4.0 International License] License - see the LICENSE file for details.
+This project is licensed under the [CC-BY-4.0] License - see the LICENSE file for details.
 
 ---
 

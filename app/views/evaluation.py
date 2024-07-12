@@ -22,7 +22,10 @@ metric_explanations = {
 st.title("Evaluation")
 
 # Dropdown to select the directory
-directories = ['./customer_service_classifier_ai_data/results/automated', './customer_service_classifier_ai_data/results/manual']
+directories = [
+    './customer_service_classifier_ai_data/results/automated',
+    './customer_service_classifier_ai_data/results/manual',
+]
 results_dir = st.selectbox('Select the directory path for evaluation results:', directories)
 
 if st.button('Evaluate Results', use_container_width=True):
@@ -49,24 +52,24 @@ if st.button('Evaluate Results', use_container_width=True):
 
             # Confusion Matrix Visualization
             st.write("**Confusion Matrix:**")
-            plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'])
-            conf_matrix_path = plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], save=True)
+            plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], show=True)
+            conf_matrix_path = plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], show=False)
             st.markdown(get_image_download_link(conf_matrix_path, "Download confusion matrix"), unsafe_allow_html=True)
             
             # Additional Visualizations as discussed
             st.write("**Classification Report:**")
-            plot_classification_report(metrics['classification_report'])
-            class_report_path = plot_classification_report(metrics['classification_report'], save=True)
+            plot_classification_report(metrics['classification_report'], show=True)
+            class_report_path = plot_classification_report(metrics['classification_report'], show=False)
             st.markdown(get_image_download_link(class_report_path, "Download classification report"), unsafe_allow_html=True)
 
             st.write("**Class Distribution:**")
-            plot_class_distribution(metrics['y_true'], metrics['y_pred'])
-            class_distribution_path = plot_class_distribution(metrics['y_true'], metrics['y_pred'], save=True)
+            plot_class_distribution(metrics['y_true'], metrics['y_pred'], show=True)
+            class_distribution_path = plot_class_distribution(metrics['y_true'], metrics['y_pred'], show=False)
             st.markdown(get_image_download_link(class_distribution_path, "Download class distribution"), unsafe_allow_html=True)
 
             st.write("**Text Length Analysis:**")
-            plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'])
-            text_length_path = plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], save=True)
+            plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], show=True)
+            text_length_path = plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], show=False)
             st.markdown(get_image_download_link(text_length_path, "Download text length analysis"), unsafe_allow_html=True)
 
             st.divider()
