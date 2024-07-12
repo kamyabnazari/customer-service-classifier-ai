@@ -116,13 +116,38 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    # Ensure all underscores are replaced with hyphens and remove repeating hyphens
-    clean_name = '-'.join(filter(None, clean_name.replace("_", "-").split('-')))
+    clean_name = '-'.join(filter(None, clean_name.split('-')))
     new_filename = f"table-{filename.replace('.tex', '').replace('_', '-')}-{clean_name}.tex"
     path = os.path.join(tex_directory, new_filename)
     
-    # Convert DataFrame to LaTeX and save it
-    latex_str = df.to_latex(index=False)
+    # Format the caption text: replace underscores, capitalize first letters
+    formatted_caption = " ".join([word.capitalize() for word in filename.replace('.tex', '').replace('_', ' ').split()])
+    clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
+    
+    # Generate LaTeX table without custom headers
+    latex_table = df.to_latex(index=False, column_format="X l", 
+                              bold_rows=True, escape=False, longtable=False)
+
+    # Extract headers from DataFrame and format them
+    headers = " & ".join([f"\\textbf{{{col}}}" for col in df.columns])
+    header_latex = f"\\toprule\n{headers} \\\\\n\\midrule"
+
+    # Replace the default headers with custom formatted headers
+    latex_table = latex_table.replace("\\toprule", header_latex)
+    latex_table = latex_table.replace("\\begin{tabular}{X l}", "\\begin{tabularx}{\\textwidth}{X l}")
+    latex_table = latex_table.replace("\\end{tabular}", "\\end{tabularx}")
+    
+    # Wrap the table with the table environment
+    latex_str = f"""
+\\begin{{table}}[!ht]
+    \\centering
+    {latex_table}
+    \\caption{{{clean_caption} {formatted_caption}}}
+    \\label{{tab:{clean_name}}}
+\\end{{table}}
+"""
+
+    # Save the LaTeX string to file
     with open(path, 'w') as file:
         file.write(latex_str)
     
@@ -130,7 +155,7 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     with open(path, "rb") as f:
         data = f.read()
     b64 = base64.b64encode(data).decode("utf-8")
-    href = f'<a href="data:file/tex;base64,{b64}" download="{new_filename}">{caption}</a>'
+    href = f'<a href="data:file/tex;base64,{b64}" download="{new_filename}">Download LaTeX table</a>'
     
     return href
 
@@ -155,7 +180,6 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     if show:
         st.pyplot(fig)
     else:
-        # Generate and return the download link
         return get_plot_download_link(fig, 'confusion_matrix.pgf', original_filename)
 
 def plot_classification_report(class_report, original_filename, show=True):
