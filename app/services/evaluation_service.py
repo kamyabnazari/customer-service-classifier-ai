@@ -1,5 +1,4 @@
 import os
-import base64
 import matplotlib
 from matplotlib.colors import BoundaryNorm
 import streamlit as st
@@ -59,7 +58,7 @@ def calculate_specificity_fpr(conf_matrix):
     fpr = np.divide(fp_safe, tn_safe + fp_safe)
     return specificity, fpr
 
-def get_plot_download_link(fig, filename, original_filename, caption="Download"):
+def generate_plot(fig, filename, original_filename):
     """Save the plot as a PGF file and create a download link."""
     pgf_directory = "./customer_service_classifier_ai_data/evaluation/pgf"
     tex_directory = "./customer_service_classifier_ai_data/evaluation/figures"
@@ -99,14 +98,7 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
             "\\end{figure}\n"
         )
 
-    # Create the download link for the PGF file
-    with open(pgf_path, "rb") as f:
-        data = f.read()
-    b64 = base64.b64encode(data).decode("utf-8")
-    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{pgf_filename}">{caption}</a>'
-    return href
-
-def get_table_download_link(df, filename, original_filename, caption="Download LaTeX table"):
+def generate_table(df, filename, original_filename):
     """Convert DataFrame to LaTeX and create a download link with a unique file name."""
     tex_directory = "./customer_service_classifier_ai_data/evaluation/tables"
     
@@ -168,13 +160,6 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     with open(path, 'w') as file:
         file.write(latex_str)
     
-    # Create the download link
-    with open(path, "rb") as f:
-        data = f.read()
-    b64 = base64.b64encode(data).decode("utf-8")
-    href = f'<a href="data:file/tex;base64,{b64}" download="{new_filename}">Download LaTeX table</a>'
-    
-    return href
 
 def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     fig, ax = plt.subplots()
@@ -197,7 +182,7 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     if show:
         st.pyplot(fig)
     else:
-        return get_plot_download_link(fig, 'confusion_matrix.pgf', original_filename)
+        return generate_plot(fig, 'confusion_matrix.pgf', original_filename)
 
 def plot_classification_report(class_report, original_filename, show=True):
     report_df = pd.DataFrame(class_report).transpose()
@@ -210,7 +195,7 @@ def plot_classification_report(class_report, original_filename, show=True):
     if show:
         st.pyplot(fig)
     else:
-        return get_plot_download_link(fig, 'classification_report.pgf', original_filename)
+        return generate_plot(fig, 'classification_report.pgf', original_filename)
 
 def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     actual_counts = pd.Series(y_true).value_counts()
@@ -224,7 +209,7 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     if show:
         st.pyplot(fig)
     else:
-        return get_plot_download_link(fig, 'class_distribution.pgf', original_filename)
+        return generate_plot(fig, 'class_distribution.pgf', original_filename)
 
 def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=True):
     text_lengths = [len(text.split()) for text in texts]
@@ -239,7 +224,7 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
     if show:
         st.pyplot(fig)
     else:
-        return get_plot_download_link(fig, 'text_length_analysis.pgf', original_filename)
+        return generate_plot(fig, 'text_length_analysis.pgf', original_filename)
 
 def evaluate_all_results(results_dir):
     result_files = os.listdir(results_dir)

@@ -2,21 +2,21 @@ import streamlit as st
 import pandas as pd
 import os
 from services.evaluation_service import (
-    evaluate_single_result, get_table_download_link,
+    evaluate_single_result, generate_table,
     plot_confusion_matrix, plot_classification_report,
     plot_class_distribution, plot_text_length_analysis
 )
 
 # Dictionary for metric explanations
 metric_explanations = {
-    'Accuracy': 'The ratio of correctly predicted observations to the total observations.',
-    'Precision': 'The ratio of correctly predicted positive observations to the total predicted positives.',
-    'Recall': 'The ratio of correctly predicted positive observations to all actual positives.',
-    'F1 Score': 'The weighted average of Precision and Recall.',
-    'Specificity': 'The proportion of actual negatives that are correctly identified.',
-    'Kappa': 'Measures inter-rater reliability for categorical items corrected for chance.',
-    'False Positive Rate': 'The proportion of actual negatives that are incorrectly classified as positives.',
-    'G-Mean': 'The geometric mean of sensitivity and specificity, particularly useful for imbalanced datasets.'
+    'Accuracy': 'Das Verhältnis von korrekt vorhergesagten Beobachtungen zu den Gesamtbeobachtungen.',
+    'Precision': 'Das Verhältnis von korrekt vorhergesagten positiven Beobachtungen zu den insgesamt positiv vorhergesagten.',
+    'Recall': 'Das Verhältnis von korrekt vorhergesagten positiven Beobachtungen zu allen tatsächlich positiven.',
+    'F1 Score': 'Das gewichtete Mittel von Präzision und Recall.',
+    'Specificity': 'Der Anteil der tatsächlich negativen Fälle, die korrekt identifiziert wurden.',
+    'Kappa': 'Maß für die Übereinstimmung zwischen Beurteilern, korrigiert um Zufall.',
+    'False Positive Rate': 'Der Anteil der tatsächlich negativen Fälle, die fälschlicherweise als positiv klassifiziert wurden.',
+    'G-Mean': 'Das geometrische Mittel aus Sensitivität und Spezifität, besonders nützlich bei unausgeglichenen Datensätzen.'
 }
 
 st.title("Evaluation")
@@ -57,37 +57,31 @@ else:
                     'Explanation': [metric_explanations[m] for m in ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean']]
                 })
                 st.dataframe(summary_metrics, use_container_width=True)
-                summary_metrics_link = get_table_download_link(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file)
-                st.markdown(summary_metrics_link, unsafe_allow_html=True)
+                generate_table(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file)
 
                 # Detailed Classification Report
                 st.write("**Detailed Classification Report:**")
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
                 st.dataframe(report_df, use_container_width=True)
-                report_df_link = get_table_download_link(report_df, "classification_report.tex", original_filename=selected_file)
-                st.markdown(report_df_link, unsafe_allow_html=True)
+                generate_table(report_df, "classification_report.tex", original_filename=selected_file)
 
                 # Confusion Matrix Visualization
                 st.write("**Confusion Matrix:**")
                 plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=True)
-                confusion_matrix_link = plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=False)
-                st.markdown(confusion_matrix_link, unsafe_allow_html=True)
+                plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=False)
                 
                 # Additional Visualizations as discussed
                 st.write("**Classification Report:**")
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=True)
-                class_report_link = plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
-                st.markdown(class_report_link, unsafe_allow_html=True)
+                plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
 
                 st.write("**Class Distribution:**")
                 plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)
-                class_dist_link = plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
-                st.markdown(class_dist_link, unsafe_allow_html=True)
+                plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
 
                 st.write("**Text Length Analysis:**")
                 plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)
-                text_length_link = plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
-                st.markdown(text_length_link, unsafe_allow_html=True)
+                plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
 
                 st.divider()
         else:
