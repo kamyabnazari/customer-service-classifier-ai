@@ -12,13 +12,13 @@ def classify_with_gpt_3_5_turbo_few_shot(text, categories, temperature, classifi
     return classify_inquiry_few_shot(text, categories, model="gpt-3.5-turbo-0125", classification_type="few_shot", temperature=temperature, classification_method=classification_method, true_category=true_category)
 
 def classify_with_gpt_3_5_turbo_fine_zero_shot(text, categories, temperature, classification_method, true_category):
-    return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9jq8ioDW", classification_type="fine_zero_shot", temperature=temperature, classification_method=classification_method, true_category=true_category)
+    return classify_inquiry_zero_shot(text, categories, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9k0H1hdV", classification_type="fine_zero_shot", temperature=temperature, classification_method=classification_method, true_category=true_category)
 
 def classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature, classification_method, true_category):
-    return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9jq8ioDW", classification_type="fine_few_shot", temperature=temperature, classification_method=classification_method, true_category=true_category)
+    return classify_inquiry_few_shot(text, categories, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9k0H1hdV", classification_type="fine_few_shot", temperature=temperature, classification_method=classification_method, true_category=true_category)
 
 def classify_with_gpt_3_5_turbo_fine_no_prompting(text, temperature, classification_method, true_category):
-    return classify_inquiry_no_prompting(text, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9jq8ioDW", classification_type="fine_no_prompting", temperature=temperature, classification_method=classification_method, true_category=true_category)
+    return classify_inquiry_no_prompting(text, model="ft:gpt-3.5-turbo-0125:personal:classifier-model:9k0H1hdV", classification_type="fine_no_prompting", temperature=temperature, classification_method=classification_method, true_category=true_category)
 
 def classify_inquiry_zero_shot(text, categories, model, classification_type, temperature, classification_method, true_category):
     categories_str = ", ".join(categories)
