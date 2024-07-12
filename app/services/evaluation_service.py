@@ -152,14 +152,13 @@ def generate_table(df, filename, original_filename):
         \\centering
         {latex_table}
         \\caption{{{clean_caption} {formatted_caption}}}
-        \\label{{tab:{clean_name}}}
+        \\label{{tab:{clean_name}-{filename.replace('.tex', '').replace('_', '-')}}}
     \\end{{table}}
     """
 
     # Save the LaTeX string to file
     with open(path, 'w') as file:
         file.write(latex_str)
-    
 
 def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     fig, ax = plt.subplots()
