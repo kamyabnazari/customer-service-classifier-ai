@@ -81,6 +81,10 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
     fig.savefig(pgf_path, format='pgf')
     plt.close(fig)
 
+    # Format the caption text: replace underscores, capitalize first letters, and remove extensions
+    formatted_caption = " ".join([word.capitalize() for word in filename.replace('.pgf', '').replace('_', ' ').split()])
+    clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
+
     # Create the LaTeX file at the TeX path
     with open(tex_path, "w") as tex_file:
         tex_file.write(
@@ -89,8 +93,8 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
             "    \\resizebox{1.0\\textwidth}{!}{\n"
             f"        \\input{{resources/pgf/{pgf_filename}}}\n"
             "    }\n"
-            f"    \\caption{{{caption}}}\n"
-            f"    \\label{{fig:{filename.replace('.pgf', '').replace('_', '-')}}}\n"
+            f"    \\caption{{{formatted_caption} {clean_caption}}}\n"
+            f"    \\label{{fig:{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}}}\n"
             "\\end{figure}\n"
         )
 
