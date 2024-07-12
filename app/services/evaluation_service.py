@@ -1,6 +1,7 @@
 import os
 import base64
 import matplotlib
+from matplotlib.colors import BoundaryNorm
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -83,14 +84,23 @@ def get_table_download_link(df, filename="data_table.tex", caption="Download LaT
 def plot_confusion_matrix(conf_matrix, labels, show=True):
     path = get_plot_path('confusion_matrix.pgf')
     fig, ax = plt.subplots()
-    cax = ax.matshow(conf_matrix, cmap='Blues')
-    plt.colorbar(cax)
-    for (i, j), val in np.ndenumerate(conf_matrix):
-        ax.text(j, i, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
-    ax.set_xticks(np.arange(len(labels)))
-    ax.set_yticks(np.arange(len(labels)))
+    
+    # Define the boundaries for your discrete colormap
+    boundaries = [np.min(conf_matrix) - 1] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
+    cmap = plt.get_cmap('Blues', len(boundaries) - 1)
+    norm = BoundaryNorm(boundaries, cmap.N, clip=True)
+
+    cax = ax.pcolormesh(conf_matrix, cmap=cmap, norm=norm, edgecolors='k', linewidth=2)
+    plt.colorbar(cax, spacing='proportional')
+
+    ax.set_xticks(np.arange(len(labels)) + 0.5, minor=False)
+    ax.set_yticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_xticklabels(labels)
     ax.set_yticklabels(labels)
+
+    for (i, j), val in np.ndenumerate(conf_matrix):
+        ax.text(j + 0.5, i + 0.5, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
+
     plt.xlabel('Predicted')
     plt.ylabel('True')
     plt.title('Confusion Matrix')
