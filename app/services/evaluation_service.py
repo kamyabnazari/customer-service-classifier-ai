@@ -175,9 +175,10 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     ax.set_yticklabels(labels)
     for (i, j), val in np.ndenumerate(conf_matrix):
         ax.text(j + 0.5, i + 0.5, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
-    plt.title('Confusion Matrix')
+    
+    plt.title('Konfusionsmatrix')
+    plt.xlabel('Vorhergesagt')
+    plt.ylabel('Wahr')
 
     if show:
         st.pyplot(fig)
@@ -189,9 +190,9 @@ def plot_classification_report(class_report, original_filename, show=True):
     report_df.drop(['support'], axis=1, inplace=True)
     fig, ax = plt.subplots(figsize=(10, 5))
     report_df.plot(kind='bar', ax=ax)
-    plt.title('Classification Report')
-    plt.xlabel('Classes')
-    plt.ylabel('Scores')
+    plt.title('Klassifikationsbericht')
+    plt.xlabel('Klassen')
+    plt.ylabel('Werte')
     if show:
         st.pyplot(fig)
     else:
@@ -200,12 +201,12 @@ def plot_classification_report(class_report, original_filename, show=True):
 def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     actual_counts = pd.Series(y_true).value_counts()
     predicted_counts = pd.Series(y_pred).value_counts()
-    df = pd.DataFrame({'Actual': actual_counts, 'Predicted': predicted_counts}).fillna(0)
+    df = pd.DataFrame({'Tatsächlich': actual_counts, 'Vorhergesagt': predicted_counts}).fillna(0)
     fig, ax = plt.subplots(figsize=(10, 5))
     df.plot(kind='bar', ax=ax)
-    plt.title('Class Distribution - Actual vs. Predicted')
-    plt.xlabel('Classes')
-    plt.ylabel('Frequency')
+    plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt')
+    plt.xlabel('Klassen')
+    plt.ylabel('Häufigkeit')
     if show:
         st.pyplot(fig)
     else:
@@ -214,12 +215,12 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
 def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=True):
     text_lengths = [len(text.split()) for text in texts]
     is_correct = np.array(y_true) == np.array(y_pred)
-    df = pd.DataFrame({'Text Length': text_lengths, 'Correct': is_correct})
+    df = pd.DataFrame({'Textlänge': text_lengths, 'Korrekt': is_correct})
     fig, ax = plt.subplots(figsize=(10, 6))
-    df.boxplot(column='Text Length', by='Correct', ax=ax)
-    plt.title('Text Length vs. Classification Correctness')
-    plt.xlabel('Is Classification Correct?')
-    plt.ylabel('Text Length')
+    df.boxplot(column='Textlänge', by='Korrekt', ax=ax)
+    plt.title('Textlänge vs. Klassifikationsgenauigkeit')
+    plt.xlabel('Ist Klassifikation korrekt?')
+    plt.ylabel('Textlänge')
     plt.xticks([1, 2], ['Incorrect', 'Correct'])
     if show:
         st.pyplot(fig)
