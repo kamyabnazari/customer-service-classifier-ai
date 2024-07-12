@@ -124,13 +124,23 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     formatted_caption = " ".join([word.capitalize() for word in filename.replace('.tex', '').replace('_', ' ').split()])
     clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
     
+    # Determine the correct column format based on the number of DataFrame columns
+    column_format = " ".join(["X"] * len(df.columns))
+
     # Generate LaTeX table without custom headers
-    latex_table = df.to_latex(index=False, column_format="X l", 
-                              bold_rows=True, escape=False, longtable=False)
+    latex_table = df.to_latex(
+        index=False,
+        escape=False,
+        sparsify=True,
+        multirow=True,
+        multicolumn=True,
+        bold_rows=True,
+        longtable=False,
+        column_format=column_format
+       )
 
     # Extract headers from DataFrame and format them
     headers = " & ".join([f"\\textbf{{{col}}}" for col in df.columns])
-    header_latex = f"\\toprule\n{headers} \\\\\n\\midrule"
 
     # Replace the default headers with custom formatted headers
     latex_table = latex_table.split('\n')
@@ -141,7 +151,7 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
 
     # Rejoin the table and wrap with tabularx environment
     latex_table = "\n".join(latex_table)
-    latex_table = latex_table.replace("\\begin{tabular}{X l}", "\\begin{tabularx}{\\textwidth}{X l}")
+    latex_table = latex_table.replace("\\begin{tabular}", "\\begin{tabularx}{\\textwidth}")
     latex_table = latex_table.replace("\\end{tabular}", "\\end{tabularx}")
     
     # Wrap the table with the table environment
