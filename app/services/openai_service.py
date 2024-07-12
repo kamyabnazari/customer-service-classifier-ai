@@ -1,6 +1,7 @@
 from openai import OpenAI
 from config import OPENAI_API_KEY
 from .logging_service import write_log_to_file, write_results_to_csv
+import time
 
 # Set up the OpenAI API client
 openai = OpenAI(api_key=OPENAI_API_KEY)
@@ -29,14 +30,7 @@ def classify_inquiry_zero_shot(text, categories, model, classification_type, tem
         {"role": "user", "content": f"Text: '{text}'"}
     ]
 
-    response = openai.chat.completions.create(
-        model=model,
-        messages=messages,
-        max_tokens=20,
-        temperature=temperature,
-        n=1,
-        stop=None
-    )
+    response = retry_operation(openai.chat.completions.create, model=model, messages=messages, max_tokens=20, temperature=temperature, n=1, stop=None)
 
     classification = response.choices[0].message.content.strip()
     usage = response.usage
@@ -63,14 +57,7 @@ def classify_inquiry_few_shot(text, categories, model, classification_type, temp
         {"role": "user", "content": f"Text: '{text}'"}
     ]
     
-    response = openai.chat.completions.create(
-        model=model,
-        messages=messages,
-        max_tokens=20,
-        temperature=temperature,
-        n=1,
-        stop=None
-    )
+    response = retry_operation(openai.chat.completions.create, model=model, messages=messages, max_tokens=20, temperature=temperature, n=1, stop=None)
 
     classification = response.choices[0].message.content.strip()
     usage = response.usage
@@ -87,14 +74,7 @@ def classify_inquiry_no_prompting(text, model, classification_type, temperature,
         {"role": "user", "content": f"Text: '{text}'"}
     ]
 
-    response = openai.chat.completions.create(
-        model=model,
-        messages=messages,
-        max_tokens=20,
-        temperature=temperature,
-        n=1,
-        stop=None
-    )
+    response = retry_operation(openai.chat.completions.create, model=model, messages=messages, max_tokens=20, temperature=temperature, n=1, stop=None)
 
     classification = response.choices[0].message.content.strip()
     usage = response.usage
@@ -131,3 +111,18 @@ def get_fine_tune_status(fine_tuning_job_id):
 def list_fine_tune_jobs():
     response = openai.fine_tuning.jobs.list()
     return response.data
+
+def retry_operation(function, *args, **kwargs):
+    max_retries = 3  # Maximum number of retries
+    retry_delay = 5  # Delay between retries in seconds
+    for attempt in range(max_retries):
+        try:
+            return function(*args, **kwargs)
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed with error: {e}")
+            if attempt < max_retries - 1:
+                print("Retrying in {} seconds...".format(retry_delay))
+                time.sleep(retry_delay)
+            else:
+                print("All retry attempts failed.")
+                raise
