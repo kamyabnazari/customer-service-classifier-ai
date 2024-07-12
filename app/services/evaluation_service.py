@@ -60,7 +60,7 @@ def calculate_specificity_fpr(conf_matrix):
     return specificity, fpr
 
 def get_plot_download_link(fig, filename, original_filename, caption="Download"):
-    """Save the plot as a PGF file in the 'pgf' folder and create a TeX file in the 'figures' folder."""
+    """Save the plot as a PGF file and create a download link."""
     pgf_directory = "./customer_service_classifier_ai_data/evaluation/pgf"
     tex_directory = "./customer_service_classifier_ai_data/evaluation/figures"
     
@@ -72,9 +72,10 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
     # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    new_filename = f"pgf-{filename.replace('.pgf', '')}-{clean_name}.pgf"
-    pgf_path = os.path.join(pgf_directory, new_filename)
-    tex_path = os.path.join(tex_directory, new_filename.replace('.pgf', '.tex'))
+    pgf_filename = f"pgf-{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}.pgf"
+    figure_filename = f"figure-{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}.tex"
+    pgf_path = os.path.join(pgf_directory, pgf_filename)
+    tex_path = os.path.join(tex_directory, figure_filename)
 
     # Save the figure to the PGF path
     fig.savefig(pgf_path, format='pgf')
@@ -86,10 +87,10 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
             "\\begin{figure}[ht]\n"
             "    \\centering\n"
             "    \\resizebox{1.0\\textwidth}{!}{\n"
-            f"        \\input{{../pgf/{new_filename}}}\n"
+            f"        \\input{{resources/pgf/{pgf_filename}}}\n"
             "    }\n"
             f"    \\caption{{{caption}}}\n"
-            "    \\label{fig:" + filename.replace('.pgf', '').replace('_', '-') + "}\n"
+            f"    \\label{{fig:{filename.replace('.pgf', '').replace('_', '-')}}}\n"
             "\\end{figure}\n"
         )
 
@@ -97,7 +98,7 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
     with open(pgf_path, "rb") as f:
         data = f.read()
     b64 = base64.b64encode(data).decode("utf-8")
-    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{new_filename}">{caption}</a>'
+    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{pgf_filename}">{caption}</a>'
     return href
 
 def get_table_download_link(df, filename, original_filename, caption="Download LaTeX table"):
