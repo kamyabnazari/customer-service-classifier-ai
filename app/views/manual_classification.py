@@ -4,7 +4,8 @@ from services.openai_service import (
     classify_with_gpt_3_5_turbo_zero_shot,
     classify_with_gpt_3_5_turbo_few_shot,
     classify_with_gpt_3_5_turbo_fine_zero_shot,
-    classify_with_gpt_3_5_turbo_fine_few_shot
+    classify_with_gpt_3_5_turbo_fine_few_shot,
+    classify_with_gpt_3_5_turbo_fine_no_prompting
 )
 
 st.title("Manual Classification")
@@ -17,7 +18,13 @@ if not st.session_state.get("dataset_loaded", False):
 else:
     # Select model and method for manual classification
     model_option = st.selectbox("Select a model", ["GPT-3.5 Turbo", "GPT-3.5 Turbo Fine-Tuned"])
-    method_option = st.selectbox("Select a method", ["Zero-Shot", "Few-Shot"])
+    
+    # Conditionally enable "No Prompting" method
+    if model_option == "GPT-3.5 Turbo Fine-Tuned":
+        method_option = st.selectbox("Select a method", ["Zero-Shot", "Few-Shot", "No Prompting"])
+    else:
+        method_option = st.selectbox("Select a method", ["Zero-Shot", "Few-Shot"])
+    
     temperature_option = st.selectbox("Select Temperature", [0.0, 1.0])
 
     # Input field for user to enter their prompt
@@ -47,11 +54,13 @@ else:
                     classification = classify_with_gpt_3_5_turbo_few_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
                 elif model_option == "GPT-3.5 Turbo Fine-Tuned":
                     classification = classify_with_gpt_3_5_turbo_fine_few_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
-        
+            elif method_option == "No Prompting":
+                if model_option == "GPT-3.5 Turbo Fine-Tuned":
+                    classification = classify_with_gpt_3_5_turbo_fine_no_prompting(user_input, temperature_option, classification_method="manual", true_category=true_category)
+
         # Display the response
         if classification != "":
             st.info(f"Classification: {classification}")
-
         else:
             st.write("Please enter a text to classify.")
 
