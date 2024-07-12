@@ -15,7 +15,7 @@ def classify_test_samples(global_state, model_option, method_option, temperature
         if 'text' not in test_data.columns or 'category' not in test_data.columns:
             raise ValueError("The test dataset must contain 'text' and 'category' columns.")
 
-        samples = test_data.head(10)
+        samples = test_data # The Full Test Data
         
         # Extract categories from the dataset
         if "categories" in global_state.datasets:

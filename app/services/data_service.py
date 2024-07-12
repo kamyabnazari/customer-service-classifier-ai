@@ -7,7 +7,7 @@ import json
 
 def list_datasets(data_dir: str) -> list:
     """List all dataset folders in the specified data directory, ignoring folders ending with '_generated'."""
-    return [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d)) and not d.endswith('_generated')]
+    return [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d)) and not d.endswith('_generated') and not d.endswith('_results')]
 
 def load_dataset(folder_path: str) -> dict:
     """Load CSV files from a dataset folder into a dictionary of Pandas DataFrames."""
