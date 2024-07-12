@@ -117,7 +117,7 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
     clean_name = '-'.join(filter(None, clean_name.split('-')))
-    new_filename = f"table-{filename.replace('.tex', '').replace('_', '-')}-{clean_name}.tex"
+    new_filename = f"table-{clean_name}-{filename.replace('.tex', '').replace('_', '-')}.tex"
     path = os.path.join(tex_directory, new_filename)
     
     # Generate LaTeX table without custom headers
@@ -142,14 +142,14 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     
     # Wrap the table with the table environment
     latex_str = f"""
-\\begin{{table}}[!ht]
-    \\centering
-                {latex_table}
-    \\caption{{{caption}}}
-    \\label{{tab:{clean_name}}}
-\\end{{table}}
-"""
-
+                \\begin{{table}}[!ht]
+                    \\centering
+                    {latex_table}
+                    \\caption{{{caption}}}
+                    \\label{{tab:{clean_name}}}
+                \\end{{table}}
+                """
+    
     # Save the LaTeX string to file
     with open(path, 'w') as file:
         file.write(latex_str)
