@@ -108,16 +108,28 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
 
 def get_table_download_link(df, filename, original_filename, caption="Download LaTeX table"):
     """Convert DataFrame to LaTeX and create a download link with a unique file name."""
+    tex_directory = "./customer_service_classifier_ai_data/evaluation/tables"
+    
+    if not os.path.exists(tex_directory):
+        os.makedirs(tex_directory)
+    
+    # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    # Ensure all underscores are replaced with hyphens
-    clean_name = clean_name.replace("_", "-")
-    # Remove repeating hyphens
-    clean_name = '-'.join(filter(None, clean_name.split('-')))
+    # Ensure all underscores are replaced with hyphens and remove repeating hyphens
+    clean_name = '-'.join(filter(None, clean_name.replace("_", "-").split('-')))
     new_filename = f"table-{filename.replace('.tex', '').replace('_', '-')}-{clean_name}.tex"
+    path = os.path.join(tex_directory, new_filename)
     
+    # Convert DataFrame to LaTeX and save it
     latex_str = df.to_latex(index=False)
-    b64 = base64.b64encode(latex_str.encode()).decode("utf-8")
+    with open(path, 'w') as file:
+        file.write(latex_str)
+    
+    # Create the download link
+    with open(path, "rb") as f:
+        data = f.read()
+    b64 = base64.b64encode(data).decode("utf-8")
     href = f'<a href="data:file/tex;base64,{b64}" download="{new_filename}">{caption}</a>'
     
     return href

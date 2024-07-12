@@ -29,8 +29,7 @@ if not st.session_state.get("dataset_loaded", False):
 else:
     # Dropdown to select the directory
     directories = [
-        './customer_service_classifier_ai_data/results/automated',
-        './customer_service_classifier_ai_data/results/manual',
+        './customer_service_classifier_ai_data/results/automated'
     ]
     results_dir = st.selectbox('Select the directory path for evaluation results:', directories)
 
@@ -58,13 +57,15 @@ else:
                     'Explanation': [metric_explanations[m] for m in ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean']]
                 })
                 st.dataframe(summary_metrics, use_container_width=True)
-                st.markdown(get_table_download_link(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file), unsafe_allow_html=True)
+                summary_metrics_link = get_table_download_link(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file)
+                st.markdown(summary_metrics_link, unsafe_allow_html=True)
 
                 # Detailed Classification Report
                 st.write("**Detailed Classification Report:**")
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
                 st.dataframe(report_df, use_container_width=True)
-                st.markdown(get_table_download_link(report_df, "classification_report.tex", original_filename=selected_file), unsafe_allow_html=True)
+                report_df_link = get_table_download_link(report_df, "classification_report.tex", original_filename=selected_file)
+                st.markdown(report_df_link, unsafe_allow_html=True)
 
                 # Confusion Matrix Visualization
                 st.write("**Confusion Matrix:**")
