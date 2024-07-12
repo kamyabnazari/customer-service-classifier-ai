@@ -59,61 +59,66 @@ def calculate_specificity_fpr(conf_matrix):
     fpr = np.divide(fp_safe, tn_safe + fp_safe)
     return specificity, fpr
 
-def get_plot_path(filename):
-    """Generates a file path for saving plots."""
+def get_plot_download_link(fig, filename, original_filename, caption="Download"):
+    """Save the plot as a PGF file and create a download link."""
     directory = "./customer_service_classifier_ai_data/temp_plots"
     if not os.path.exists(directory):
         os.makedirs(directory)
-    return os.path.join(directory, filename)
+    
+    # Clean and prepare the file name
+    base_name = os.path.splitext(original_filename)[0]
+    clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
+    new_filename = f"figure-{filename.replace('.pgf', '')}-{clean_name}.pgf"
+    path = os.path.join(directory, new_filename)
 
-def get_image_download_link(img_path, caption="Download"):
-    """Generate a link to download a file."""
-    with open(img_path, "rb") as f:
+    # Save the figure
+    fig.savefig(path, format='pgf')
+    plt.close(fig)
+
+    # Create the download link
+    with open(path, "rb") as f:
         data = f.read()
     b64 = base64.b64encode(data).decode("utf-8")
-    href = f'<a href="data:file/octet-stream;base64,{b64}" download="{os.path.basename(img_path)}">{caption}</a>'
+    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{new_filename}">{caption}</a>'
     return href
 
-def get_table_download_link(df, filename="data_table.tex", caption="Download LaTeX table"):
-    """Convert DataFrame to LaTeX and create a download link."""
+def get_table_download_link(df, filename, original_filename, caption="Download LaTeX table"):
+    """Convert DataFrame to LaTeX and create a download link with a unique file name."""
+    base_name = os.path.splitext(original_filename)[0]
+    clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
+    new_filename = f"table-{filename.replace('.tex', '')}-{clean_name}.tex"
+    
     latex_str = df.to_latex(index=False)
     b64 = base64.b64encode(latex_str.encode()).decode("utf-8")
-    href = f'<a href="data:file/tex;base64,{b64}" download="{filename}">{caption}</a>'
+    href = f'<a href="data:file/tex;base64,{b64}" download="{new_filename}">{caption}</a>'
+    
     return href
 
-def plot_confusion_matrix(conf_matrix, labels, show=True):
-    path = get_plot_path('confusion_matrix.pgf')
+def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     fig, ax = plt.subplots()
-    
-    # Define the boundaries for your discrete colormap
+    # Setup the plot as before
     boundaries = [np.min(conf_matrix) - 1] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
     cmap = plt.get_cmap('Blues', len(boundaries) - 1)
     norm = BoundaryNorm(boundaries, cmap.N, clip=True)
-
     cax = ax.pcolormesh(conf_matrix, cmap=cmap, norm=norm, edgecolors='k', linewidth=2)
     plt.colorbar(cax, spacing='proportional')
-
     ax.set_xticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_yticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_xticklabels(labels)
     ax.set_yticklabels(labels)
-
     for (i, j), val in np.ndenumerate(conf_matrix):
         ax.text(j + 0.5, i + 0.5, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
-
     plt.xlabel('Predicted')
     plt.ylabel('True')
     plt.title('Confusion Matrix')
+
     if show:
         st.pyplot(fig)
     else:
-        plt.savefig(path, format='pgf')
-        plt.close(fig)
-        return path
-    plt.close(fig)
+        # Generate and return the download link
+        return get_plot_download_link(fig, 'confusion_matrix.pgf', original_filename)
 
-def plot_classification_report(class_report, show=True):
-    path = get_plot_path('classification_report.pgf')
+def plot_classification_report(class_report, original_filename, show=True):
     report_df = pd.DataFrame(class_report).transpose()
     report_df.drop(['support'], axis=1, inplace=True)
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -124,17 +129,13 @@ def plot_classification_report(class_report, show=True):
     if show:
         st.pyplot(fig)
     else:
-        plt.savefig(path, format='pgf')
-        plt.close(fig)
-        return path
-    plt.close(fig)
+        return get_plot_download_link(fig, 'classification_report.pgf', original_filename)
 
-def plot_class_distribution(y_true, y_pred, show=True):
-    path = get_plot_path('class_distribution.pgf')
+def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     actual_counts = pd.Series(y_true).value_counts()
     predicted_counts = pd.Series(y_pred).value_counts()
-    fig, ax = plt.subplots(figsize=(10, 5))
     df = pd.DataFrame({'Actual': actual_counts, 'Predicted': predicted_counts}).fillna(0)
+    fig, ax = plt.subplots(figsize=(10, 5))
     df.plot(kind='bar', ax=ax)
     plt.title('Class Distribution - Actual vs. Predicted')
     plt.xlabel('Classes')
@@ -142,13 +143,9 @@ def plot_class_distribution(y_true, y_pred, show=True):
     if show:
         st.pyplot(fig)
     else:
-        plt.savefig(path, format='pgf')
-        plt.close(fig)
-        return path
-    plt.close(fig)
+        return get_plot_download_link(fig, 'class_distribution.pgf', original_filename)
 
-def plot_text_length_analysis(texts, y_true, y_pred, show=True):
-    path = get_plot_path('text_length_analysis.pgf')
+def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=True):
     text_lengths = [len(text.split()) for text in texts]
     is_correct = np.array(y_true) == np.array(y_pred)
     df = pd.DataFrame({'Text Length': text_lengths, 'Correct': is_correct})
@@ -161,10 +158,7 @@ def plot_text_length_analysis(texts, y_true, y_pred, show=True):
     if show:
         st.pyplot(fig)
     else:
-        plt.savefig(path, format='pgf')
-        plt.close(fig)
-        return path
-    plt.close(fig)
+        return get_plot_download_link(fig, 'text_length_analysis.pgf', original_filename)
 
 def evaluate_all_results(results_dir):
     result_files = os.listdir(results_dir)
