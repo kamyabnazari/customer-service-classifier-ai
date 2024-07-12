@@ -8,7 +8,7 @@ st.title("Dataset Viewer")
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
-        st.switch_page("pages/home.py")
+        st.switch_page("views/home.py")
 else:
     if "categories" in global_state.datasets:
         st.write("Categories")

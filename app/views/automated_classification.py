@@ -9,7 +9,7 @@ st.title("Automated Classification")
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
-        st.switch_page("pages/home.py")
+        st.switch_page("views/home.py")
 else:
     st.subheader("GPT-3.5 Turbo Zero-Shot")
     st.write("Classify First 10 Samples using GPT-3.5 Turbo Zero-Shot:")

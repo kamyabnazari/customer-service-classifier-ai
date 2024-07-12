@@ -14,7 +14,7 @@ st.title("Utility Tools")
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
-        st.switch_page("pages/home.py")
+        st.switch_page("views/home.py")
 else:
     # Laden der CSV in JSONL-Konvertierungslogik
     st.header("Preparing Fine Tuning")

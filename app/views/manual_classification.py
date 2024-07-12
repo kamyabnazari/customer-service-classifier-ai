@@ -13,7 +13,7 @@ st.title("Manual Classification")
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
-        st.switch_page("pages/home.py")
+        st.switch_page("views/home.py")
 else:
     # Select model and method for manual classification
     model_option = st.selectbox("Select a model", ["GPT-3.5 Turbo", "GPT-3.5 Turbo Fine-Tuned"])
