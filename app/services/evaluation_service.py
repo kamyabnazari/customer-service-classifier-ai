@@ -72,8 +72,9 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
     # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    pgf_filename = f"pgf-{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}.pgf"
-    figure_filename = f"figure-{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}.tex"
+    # Adjust the order of clean name and filename
+    pgf_filename = f"pgf-{clean_name}-{filename.replace('.pgf', '').replace('_', '-')}.pgf"
+    figure_filename = f"figure-{clean_name}-{filename.replace('.pgf', '').replace('_', '-')}.tex"
     pgf_path = os.path.join(pgf_directory, pgf_filename)
     tex_path = os.path.join(tex_directory, figure_filename)
 
@@ -93,8 +94,8 @@ def get_plot_download_link(fig, filename, original_filename, caption="Download")
             "    \\resizebox{1.0\\textwidth}{!}{\n"
             f"        \\input{{resources/pgf/{pgf_filename}}}\n"
             "    }\n"
-            f"    \\caption{{{formatted_caption} {clean_caption}}}\n"
-            f"    \\label{{fig:{filename.replace('.pgf', '').replace('_', '-')}-{clean_name}}}\n"
+            f"    \\caption{{{clean_caption} {formatted_caption}}}\n"
+            f"    \\label{{fig:{clean_name}-{filename.replace('.pgf', '').replace('_', '-')}}}\n"
             "\\end{figure}\n"
         )
 
