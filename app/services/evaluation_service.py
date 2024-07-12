@@ -120,29 +120,32 @@ def get_table_download_link(df, filename, original_filename, caption="Download L
     new_filename = f"table-{filename.replace('.tex', '').replace('_', '-')}-{clean_name}.tex"
     path = os.path.join(tex_directory, new_filename)
     
-    # Format the caption text: replace underscores, capitalize first letters
-    formatted_caption = " ".join([word.capitalize() for word in filename.replace('.tex', '').replace('_', ' ').split()])
-    clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
-    
     # Generate LaTeX table without custom headers
     latex_table = df.to_latex(index=False, column_format="X l", 
-                              bold_rows=True, escape=False, longtable=False)
+                              bold_rows=False, escape=False, longtable=False)
 
     # Extract headers from DataFrame and format them
     headers = " & ".join([f"\\textbf{{{col}}}" for col in df.columns])
     header_latex = f"\\toprule\n{headers} \\\\\n\\midrule"
 
     # Replace the default headers with custom formatted headers
-    latex_table = latex_table.replace("\\toprule", header_latex)
-    latex_table = latex_table.replace("\\begin{tabular}{X l}", "\\begin{tabularx}{\\textwidth}{X l}")
+    latex_table = latex_table.split('\n')
+    # Remove the existing header line, which is typically between the first \toprule and the first \midrule
+    start = latex_table.index("\\toprule") + 1
+    end = latex_table.index("\\midrule", start)
+    latex_table = latex_table[:start] + [f"{headers} \\\\"] + latex_table[end:]
+
+    # Rejoin the table and wrap with tabularx environment
+    latex_table = "\n".join(latex_table)
+    latex_table = latex_table.replace("\\begin{tabular}{Xl}", "\\begin{tabularx}{\\textwidth}{X l}")
     latex_table = latex_table.replace("\\end{tabular}", "\\end{tabularx}")
     
     # Wrap the table with the table environment
     latex_str = f"""
 \\begin{{table}}[!ht]
     \\centering
-    {latex_table}
-    \\caption{{{clean_caption} {formatted_caption}}}
+                {latex_table}
+    \\caption{{{caption}}}
     \\label{{tab:{clean_name}}}
 \\end{{table}}
 """
