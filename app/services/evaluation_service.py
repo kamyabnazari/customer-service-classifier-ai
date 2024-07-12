@@ -175,3 +175,11 @@ def evaluate_all_results(results_dir):
         file_name = os.path.basename(file_path)
         evaluations[file_name] = metrics
     return evaluations
+
+def evaluate_single_result(file_path):
+    if os.path.exists(file_path):
+        metrics = evaluate_classification_results(file_path)
+        file_name = os.path.basename(file_path)
+        return {file_name: metrics}
+    else:
+        raise FileNotFoundError("The specified file does not exist.")
