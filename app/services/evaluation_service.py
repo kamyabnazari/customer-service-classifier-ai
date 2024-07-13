@@ -161,23 +161,27 @@ def generate_table(df, filename, original_filename):
         file.write(latex_str)
 
 def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
-    fig, ax = plt.subplots()
-    # Setup the plot as before
-    boundaries = [np.min(conf_matrix) - 1] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
-    cmap = plt.get_cmap('Blues', len(boundaries) - 1)
+    fig, ax = plt.subplots(figsize=(30, 30))
+
+    # Define the boundaries for the segments
+    boundaries = [np.min(conf_matrix)] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
+    cmap = plt.get_cmap('viridis', len(boundaries) - 1)
     norm = BoundaryNorm(boundaries, cmap.N, clip=True)
-    cax = ax.pcolormesh(conf_matrix, cmap=cmap, norm=norm, edgecolors='k', linewidth=2)
-    plt.colorbar(cax, spacing='proportional')
+
+    # Use pcolormesh for vector-based, non-rasterized output
+    cax = ax.pcolormesh(conf_matrix, cmap=cmap, norm=norm, edgecolors='k', linewidth=0.01)
+    plt.colorbar(cax, spacing='proportional', ticks=boundaries)
+
+    # Setting ticks to the center of each cell for precise label placement
     ax.set_xticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_yticks(np.arange(len(labels)) + 0.5, minor=False)
-    ax.set_xticklabels(labels)
-    ax.set_yticklabels(labels)
-    for (i, j), val in np.ndenumerate(conf_matrix):
-        ax.text(j + 0.5, i + 0.5, f'{val}', ha='center', va='center', color='white' if val > conf_matrix.max() / 2 else 'black')
-    
-    plt.title('Konfusionsmatrix')
-    plt.xlabel('Vorhergesagt')
-    plt.ylabel('Wahr')
+    ax.set_xticklabels(labels, rotation=90, fontsize=10)
+    ax.set_yticklabels(labels, fontsize=10)
+
+    # Set titles and axis labels with larger font sizes for legibility
+    plt.title('Konfusionsmatrix', fontsize=24)
+    plt.xlabel('Vorhergesagt', fontsize=20)
+    plt.ylabel('Wahr', fontsize=20)
 
     if show:
         st.pyplot(fig)
@@ -192,6 +196,7 @@ def plot_classification_report(class_report, original_filename, show=True):
     plt.title('Klassifikationsbericht')
     plt.xlabel('Klassen')
     plt.ylabel('Werte')
+    ax.set_xticklabels(range(len(report_df.index)))
     if show:
         st.pyplot(fig)
     else:
@@ -206,6 +211,7 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt')
     plt.xlabel('Klassen')
     plt.ylabel('Häufigkeit')
+    ax.set_xticklabels(range(len(df.index)))
     if show:
         st.pyplot(fig)
     else:
