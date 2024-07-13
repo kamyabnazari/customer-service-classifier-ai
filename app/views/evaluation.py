@@ -7,18 +7,6 @@ from services.evaluation_service import (
     plot_class_distribution, plot_text_length_analysis
 )
 
-# Dictionary for metric explanations
-metric_explanations = {
-    'Accuracy': 'Das Verhältnis von korrekt vorhergesagten Beobachtungen zu den Gesamtbeobachtungen.',
-    'Precision': 'Das Verhältnis von korrekt vorhergesagten positiven Beobachtungen zu den insgesamt positiv vorhergesagten.',
-    'Recall': 'Das Verhältnis von korrekt vorhergesagten positiven Beobachtungen zu allen tatsächlich positiven.',
-    'F1 Score': 'Das gewichtete Mittel von Präzision und Recall.',
-    'Specificity': 'Der Anteil der tatsächlich negativen Fälle, die korrekt identifiziert wurden.',
-    'Kappa': 'Maß für die Übereinstimmung zwischen Beurteilern, korrigiert um Zufall.',
-    'False Positive Rate': 'Der Anteil der tatsächlich negativen Fälle, die fälschlicherweise als positiv klassifiziert wurden.',
-    'G-Mean': 'Das geometrische Mittel aus Sensitivität und Spezifität, besonders nützlich bei unausgeglichenen Datensätzen.'
-}
-
 st.title("Evaluation")
 
 # Check if a dataset is loaded
@@ -53,8 +41,7 @@ else:
                 # Summary Metrics Table
                 summary_metrics = pd.DataFrame({
                     'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean'],
-                    'Value': [metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1_score'], metrics['specificity'], metrics['kappa'], metrics['fpr'], metrics['g_mean']],
-                    'Explanation': [metric_explanations[m] for m in ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean']]
+                    'Value': [metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1_score'], metrics['specificity'], metrics['kappa'], metrics['fpr'], metrics['g_mean']]
                 })
                 st.dataframe(summary_metrics, use_container_width=True)
                 generate_table(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file)
@@ -74,6 +61,14 @@ else:
                 st.write("**Classification Report:**")
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=True)
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
+
+                st.write("**Missing Categories Report:**")
+                missing_categories = report_df[report_df['support'] == 0]
+                # Check if there are any categories to report
+                if not missing_categories.empty:
+                    missing_categories = missing_categories.drop(['support'], axis=1)
+                    st.dataframe(missing_categories, use_container_width=True)
+                    generate_table(missing_categories, "missing_categories.tex", original_filename=file_name)
 
                 st.write("**Class Distribution:**")
                 plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)

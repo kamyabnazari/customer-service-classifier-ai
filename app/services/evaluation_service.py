@@ -43,11 +43,19 @@ def compute_metrics(df, y_true, y_pred, labels):
     specificity, fpr = calculate_specificity_fpr(conf_matrix)
     g_mean = np.sqrt(recall * np.nanmean(specificity))
     texts = df['request'].tolist()
-    
-    return {'y_true': y_true, 'y_pred': y_pred, 'accuracy': accuracy, 'precision': precision, 'recall': recall,
-            'f1_score': f1, 'confusion_matrix': conf_matrix, 'classification_report': class_report,
-            'specificity': np.nanmean(specificity), 'kappa': kappa, 'fpr': np.nanmean(fpr), 'g_mean': g_mean,
-            'labels': labels, 'texts': texts}
+
+    # Process each category in class_report to ensure they are dictionaries with a 'support' key
+    missing_categories = {}
+    for label, details in class_report.items():
+        if isinstance(details, dict) and details.get('support') == 0:
+            missing_categories[label] = details
+
+    return {
+        'y_true': y_true, 'y_pred': y_pred, 'accuracy': accuracy, 'precision': precision, 'recall': recall,
+        'f1_score': f1, 'confusion_matrix': conf_matrix, 'classification_report': class_report,
+        'specificity': np.nanmean(specificity), 'kappa': kappa, 'fpr': np.nanmean(fpr), 'g_mean': g_mean,
+        'labels': labels, 'texts': texts, 'missing_categories': missing_categories
+    }
 
 def calculate_specificity_fpr(conf_matrix):
     tn = np.sum(conf_matrix) - np.sum(conf_matrix, axis=0) - np.sum(conf_matrix, axis=1) + np.diag(conf_matrix)
@@ -165,7 +173,7 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
 
     # Define the boundaries for the segments
     boundaries = [np.min(conf_matrix)] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
-    cmap = plt.get_cmap('inferno', len(boundaries) - 1)
+    cmap = plt.get_cmap('viridis', len(boundaries) - 1)
     norm = BoundaryNorm(boundaries, cmap.N, clip=True)
 
     # Use pcolormesh for vector-based, non-rasterized output
