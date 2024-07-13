@@ -165,7 +165,7 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
 
     # Define the boundaries for the segments
     boundaries = [np.min(conf_matrix)] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
-    cmap = plt.get_cmap('viridis', len(boundaries) - 1)
+    cmap = plt.get_cmap('inferno', len(boundaries) - 1)
     norm = BoundaryNorm(boundaries, cmap.N, clip=True)
 
     # Use pcolormesh for vector-based, non-rasterized output
@@ -193,8 +193,7 @@ def plot_classification_report(class_report, original_filename, show=True):
     report_df = pd.DataFrame(class_report).transpose()
     report_df.drop(['support'], axis=1, inplace=True)
     fig, ax = plt.subplots(figsize=(20, 10))
-    cmap = plt.get_cmap('viridis')
-    report_df.plot(kind='bar', ax=ax, colormap=cmap)
+    report_df.plot(kind='bar', ax=ax)
     plt.title('Klassifikationsbericht', fontsize=16)
     plt.xlabel('Absichten', fontsize=10)
     plt.ylabel('Werte', fontsize=14)
@@ -209,8 +208,7 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     predicted_counts = pd.Series(y_pred).value_counts()
     df = pd.DataFrame({'Tatsächlich': actual_counts, 'Vorhergesagt': predicted_counts}).fillna(0)
     fig, ax = plt.subplots(figsize=(20, 10))
-    cmap = plt.get_cmap('viridis')
-    df.plot(kind='bar', ax=ax, colormap=cmap)
+    df.plot(kind='bar', ax=ax)
     plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt', fontsize=16)
     plt.xlabel('Absichten', fontsize=10)
     plt.ylabel('Häufigkeit', fontsize=14)
@@ -225,7 +223,7 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
     is_correct = np.array(y_true) == np.array(y_pred)
     df = pd.DataFrame({'Textlänge': text_lengths, 'Korrekt': is_correct})
     fig, ax = plt.subplots(figsize=(10, 5))
-    colors = ['blue', 'green']  # Using two colors, representative of correct vs incorrect
+    colors = ['blue', 'green']
     df.boxplot(column='Textlänge', by='Korrekt', ax=ax, boxprops=dict(color=colors[0]), whiskerprops=dict(color=colors[1]))
     plt.title('Textlänge vs. Klassifikationsgenauigkeit', fontsize=16)
     plt.xlabel('Ist Klassifikation korrekt?', fontsize=14)
