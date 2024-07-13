@@ -161,7 +161,7 @@ def generate_table(df, filename, original_filename):
         file.write(latex_str)
 
 def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
-    fig, ax = plt.subplots(figsize=(30, 30))
+    fig, ax = plt.subplots(figsize=(14, 14))
 
     # Define the boundaries for the segments
     boundaries = [np.min(conf_matrix)] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
@@ -170,18 +170,19 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
 
     # Use pcolormesh for vector-based, non-rasterized output
     cax = ax.pcolormesh(conf_matrix, cmap=cmap, norm=norm, edgecolors='k', linewidth=0.01)
-    plt.colorbar(cax, spacing='proportional', ticks=boundaries)
+    cbar = plt.colorbar(cax, spacing='proportional', ticks=boundaries)
+    cbar.set_label('Frequency of Predictions', rotation=270, labelpad=20, fontsize=18)
 
-    # Setting ticks to the center of each cell for precise label placement
+    # Setting ticks and labels for clarity
     ax.set_xticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_yticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_xticklabels(labels, rotation=90, fontsize=10)
     ax.set_yticklabels(labels, fontsize=10)
 
-    # Set titles and axis labels with larger font sizes for legibility
-    plt.title('Konfusionsmatrix', fontsize=24)
-    plt.xlabel('Vorhergesagt', fontsize=20)
-    plt.ylabel('Wahr', fontsize=20)
+    # Set titles and axis labels
+    plt.title('Konfusionsmatrix', fontsize=24, pad=20)
+    plt.xlabel('Vorhergesagt (Predicted Category)', fontsize=18)
+    plt.ylabel('Wahr (True Category)', fontsize=18)
 
     if show:
         st.pyplot(fig)
