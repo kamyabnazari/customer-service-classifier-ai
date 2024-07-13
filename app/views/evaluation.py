@@ -51,34 +51,27 @@ else:
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
                 report_df = report_df.reset_index()
                 report_df.columns = ['Category', 'Precision', 'Recall', 'F1-Score', 'Support']
+                report_df = report_df[~report_df['Category'].isin(['accuracy', 'macro avg', 'weighted avg'])]
+                report_df = report_df.sort_values(by='Precision', ascending=False)
                 st.dataframe(report_df, use_container_width=True)
                 generate_table(report_df, "classification_report.tex", original_filename=selected_file)
 
-                st.write("**Missing Categories Report:**")
-                report_df_for_missing = pd.DataFrame(metrics['classification_report']).transpose()
-                missing_categories = report_df_for_missing[report_df_for_missing['support'] == 0]
-                # Check if there are any categories to report
-                if not missing_categories.empty:
-                    missing_categories = missing_categories.reset_index()
+                st.write("**Unexpected Category Usage Report:**")
+                if 'unexpected_categories' in metrics and not metrics['unexpected_categories'].empty:
+                    unexpected_categories_df = pd.DataFrame(metrics['unexpected_categories']).transpose()
+                    unexpected_categories_df = unexpected_categories_df.reset_index()
 
-                    # Rename columns appropriately for clarity in the LaTeX document
-                    missing_categories.columns = ['Category', 'Precision', 'Recall', 'F1-Score', 'Support']
-                    st.dataframe(missing_categories, use_container_width=True)
-                    generate_table(missing_categories, "missing_categories.tex", original_filename=file_name)
+                    # Transpose the DataFrame so that categories are rows
+                    unexpected_categories_df = unexpected_categories_df.T
+                    unexpected_categories_df.columns = ['Count']
+                    unexpected_categories_df = unexpected_categories_df.reset_index()
+                    unexpected_categories_df.columns = ['Category', 'Count']
 
-                token_data = {
-                    'Total Prompt Tokens': [metrics['total_prompt_tokens']],
-                    'Total Completion Tokens': [metrics['total_completion_tokens']],
-                    'Total Tokens': [metrics['total_tokens']]
-                }
-                tokens_df = pd.DataFrame(token_data)
+                    # Remove the first row which contains unwanted 'index' and 'count' as data
+                    unexpected_categories_df = unexpected_categories_df[unexpected_categories_df['Category'] != 'index']
 
-                # Display in Streamlit
-                st.write("**Token Totals:**")
-                st.table(tokens_df)
-
-                # Generate LaTeX table
-                generate_table(tokens_df, "token_totals.tex", original_filename=file_name)
+                    st.dataframe(unexpected_categories_df, use_container_width=True)
+                    generate_table(unexpected_categories_df, "unexpected_categories.tex", original_filename=file_name)
 
                 # Confusion Matrix Visualization
                 st.write("**Confusion Matrix:**")

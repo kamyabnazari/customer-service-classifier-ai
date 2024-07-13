@@ -35,11 +35,18 @@ def evaluate_classification_results(csv_file_path):
     total_completion_tokens = df['completion_tokens'].sum()
     total_tokens = total_prompt_tokens + total_completion_tokens
 
+    # Calculate the frequency of each predicted category
+    category_usage = df['category'].value_counts()
+
+    # Identify categories in predictions not present in true categories
+    unexpected_categories = category_usage.loc[~category_usage.index.isin(y_true.unique())]
+
     metrics = compute_metrics(df, y_true, y_pred, labels)
     metrics.update({
         'total_prompt_tokens': total_prompt_tokens,
         'total_completion_tokens': total_completion_tokens,
-        'total_tokens': total_tokens
+        'total_tokens': total_tokens,
+        'unexpected_categories': unexpected_categories
     })
     return metrics
 
