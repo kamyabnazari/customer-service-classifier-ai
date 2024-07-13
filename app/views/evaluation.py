@@ -54,16 +54,6 @@ else:
                 st.dataframe(report_df, use_container_width=True)
                 generate_table(report_df, "classification_report.tex", original_filename=selected_file)
 
-                # Confusion Matrix Visualization
-                st.write("**Confusion Matrix:**")
-                plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=True)
-                plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=False)
-                
-                # Additional Visualizations as discussed
-                st.write("**Classification Report:**")
-                plot_classification_report(metrics['classification_report'], original_filename=file_name, show=True)
-                plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
-
                 st.write("**Missing Categories Report:**")
                 report_df_for_missing = pd.DataFrame(metrics['classification_report']).transpose()
                 missing_categories = report_df_for_missing[report_df_for_missing['support'] == 0]
@@ -75,6 +65,30 @@ else:
                     missing_categories.columns = ['Category', 'Precision', 'Recall', 'F1-Score', 'Support']
                     st.dataframe(missing_categories, use_container_width=True)
                     generate_table(missing_categories, "missing_categories.tex", original_filename=file_name)
+
+                token_data = {
+                    'Total Prompt Tokens': [metrics['total_prompt_tokens']],
+                    'Total Completion Tokens': [metrics['total_completion_tokens']],
+                    'Total Tokens': [metrics['total_tokens']]
+                }
+                tokens_df = pd.DataFrame(token_data)
+
+                # Display in Streamlit
+                st.write("**Token Totals:**")
+                st.table(tokens_df)
+
+                # Generate LaTeX table
+                generate_table(tokens_df, "token_totals.tex", original_filename=file_name)
+
+                # Confusion Matrix Visualization
+                st.write("**Confusion Matrix:**")
+                plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=True)
+                plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=False)
+                
+                # Additional Visualizations as discussed
+                st.write("**Classification Report:**")
+                plot_classification_report(metrics['classification_report'], original_filename=file_name, show=True)
+                plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
 
                 st.write("**Class Distribution:**")
                 plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)

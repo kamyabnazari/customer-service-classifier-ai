@@ -29,7 +29,18 @@ def evaluate_classification_results(csv_file_path):
     y_true = df['true_category']
     y_pred = df['category']
     labels = np.unique(np.concatenate((y_true, y_pred)))
+
+    # Calculate token totals
+    total_prompt_tokens = df['prompt_tokens'].sum()
+    total_completion_tokens = df['completion_tokens'].sum()
+    total_tokens = total_prompt_tokens + total_completion_tokens
+
     metrics = compute_metrics(df, y_true, y_pred, labels)
+    metrics.update({
+        'total_prompt_tokens': total_prompt_tokens,
+        'total_completion_tokens': total_completion_tokens,
+        'total_tokens': total_tokens
+    })
     return metrics
 
 def compute_metrics(df, y_true, y_pred, labels):
@@ -44,7 +55,6 @@ def compute_metrics(df, y_true, y_pred, labels):
     g_mean = np.sqrt(recall * np.nanmean(specificity))
     texts = df['request'].tolist()
 
-    # Process each category in class_report to ensure they are dictionaries with a 'support' key
     missing_categories = {}
     for label, details in class_report.items():
         if isinstance(details, dict) and details.get('support') == 0:
