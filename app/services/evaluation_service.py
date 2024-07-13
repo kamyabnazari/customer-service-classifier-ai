@@ -161,7 +161,7 @@ def generate_table(df, filename, original_filename):
         file.write(latex_str)
 
 def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
-    fig, ax = plt.subplots(figsize=(14, 14))
+    fig, ax = plt.subplots(figsize=(20, 20))
 
     # Define the boundaries for the segments
     boundaries = [np.min(conf_matrix)] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
@@ -180,9 +180,9 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     ax.set_yticklabels(labels, fontsize=10)
 
     # Set titles and axis labels
-    plt.title('Konfusionsmatrix', fontsize=24, pad=20)
-    plt.xlabel('Vorhergesagt (Predicted Category)', fontsize=18)
-    plt.ylabel('Wahr (True Category)', fontsize=18)
+    plt.title('Konfusionsmatrix', fontsize=16)
+    plt.xlabel('Vorhergesagt (Predicted Category)', fontsize=14)
+    plt.ylabel('Wahr (True Category)', fontsize=14)
 
     if show:
         st.pyplot(fig)
@@ -192,12 +192,13 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
 def plot_classification_report(class_report, original_filename, show=True):
     report_df = pd.DataFrame(class_report).transpose()
     report_df.drop(['support'], axis=1, inplace=True)
-    fig, ax = plt.subplots(figsize=(10, 5))
-    report_df.plot(kind='bar', ax=ax)
-    plt.title('Klassifikationsbericht')
-    plt.xlabel('Klassen')
-    plt.ylabel('Werte')
-    ax.set_xticklabels(range(len(report_df.index)))
+    fig, ax = plt.subplots(figsize=(20, 10))
+    cmap = plt.get_cmap('viridis')
+    report_df.plot(kind='bar', ax=ax, colormap=cmap)
+    plt.title('Klassifikationsbericht', fontsize=16)
+    plt.xlabel('Absichten', fontsize=10)
+    plt.ylabel('Werte', fontsize=14)
+    ax.set_xticklabels(report_df.index, rotation=90, fontsize=10)
     if show:
         st.pyplot(fig)
     else:
@@ -207,12 +208,13 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     actual_counts = pd.Series(y_true).value_counts()
     predicted_counts = pd.Series(y_pred).value_counts()
     df = pd.DataFrame({'Tatsächlich': actual_counts, 'Vorhergesagt': predicted_counts}).fillna(0)
-    fig, ax = plt.subplots(figsize=(10, 5))
-    df.plot(kind='bar', ax=ax)
-    plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt')
-    plt.xlabel('Klassen')
-    plt.ylabel('Häufigkeit')
-    ax.set_xticklabels(range(len(df.index)))
+    fig, ax = plt.subplots(figsize=(20, 10))
+    cmap = plt.get_cmap('viridis')
+    df.plot(kind='bar', ax=ax, colormap=cmap)
+    plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt', fontsize=16)
+    plt.xlabel('Absichten', fontsize=10)
+    plt.ylabel('Häufigkeit', fontsize=14)
+    ax.set_xticklabels(df.index, rotation=90, fontsize=10)
     if show:
         st.pyplot(fig)
     else:
@@ -222,12 +224,14 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
     text_lengths = [len(text.split()) for text in texts]
     is_correct = np.array(y_true) == np.array(y_pred)
     df = pd.DataFrame({'Textlänge': text_lengths, 'Korrekt': is_correct})
-    fig, ax = plt.subplots(figsize=(10, 6))
-    df.boxplot(column='Textlänge', by='Korrekt', ax=ax)
-    plt.title('Textlänge vs. Klassifikationsgenauigkeit')
-    plt.xlabel('Ist Klassifikation korrekt?')
-    plt.ylabel('Textlänge')
-    plt.xticks([1, 2], ['Incorrect', 'Correct'])
+    fig, ax = plt.subplots(figsize=(10, 5))
+    colors = ['blue', 'green']  # Using two colors, representative of correct vs incorrect
+    df.boxplot(column='Textlänge', by='Korrekt', ax=ax, boxprops=dict(color=colors[0]), whiskerprops=dict(color=colors[1]))
+    plt.title('Textlänge vs. Klassifikationsgenauigkeit', fontsize=16)
+    plt.xlabel('Ist Klassifikation korrekt?', fontsize=14)
+    plt.ylabel('Textlänge', fontsize=14)
+    plt.xticks([1, 2], ['Incorrect', 'Correct'], fontsize=10)
+    plt.suptitle('')
     if show:
         st.pyplot(fig)
     else:
