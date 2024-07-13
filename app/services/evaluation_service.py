@@ -137,6 +137,9 @@ def generate_table(df, filename, original_filename):
     # Determine the correct column format based on the number of DataFrame columns
     column_format = " ".join(["X"] * len(df.columns))
 
+    # Format DataFrame for LaTeX
+    df = df.map(lambda x: f"\\num{{{x}}}" if isinstance(x, (int, float)) else x)
+
     # Generate LaTeX table without custom headers
     latex_table = df.to_latex(
         index=False,
@@ -151,15 +154,10 @@ def generate_table(df, filename, original_filename):
 
     # Extract headers from DataFrame and format them
     headers = " & ".join([f"\\textbf{{{col}}}" for col in df.columns])
-
-    # Replace the default headers with custom formatted headers
     latex_table = latex_table.split('\n')
-    # Remove the existing header line, which is typically between the first \toprule and the first \midrule
     start = latex_table.index("\\toprule") + 1
     end = latex_table.index("\\midrule", start)
     latex_table = latex_table[:start] + [f"{headers} \\\\"] + latex_table[end:]
-
-    # Rejoin the table and wrap with tabularx environment
     latex_table = "\n".join(latex_table)
     latex_table = latex_table.replace("\\begin{tabular}", "\\begin{tabularx}{\\textwidth}")
     latex_table = latex_table.replace("\\end{tabular}", "\\end{tabularx}")
