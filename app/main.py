@@ -11,6 +11,7 @@ pages = [
     st.Page("views/manual_classification.py", title="Manual Classification"),
     st.Page("views/automated_classification.py", title="Automated Classification"),
     st.Page("views/evaluation.py", title="Evaluation"),
+    st.Page("views/evaluation_all.py", title="Evaluation All"),
     st.Page("views/utility_tools.py", title="Utility Tools"),
 ]
 

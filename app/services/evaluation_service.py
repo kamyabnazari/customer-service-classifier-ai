@@ -254,12 +254,22 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
 def evaluate_all_results(results_dir):
     result_files = os.listdir(results_dir)
     evaluations = {}
+    token_summaries = []
     for file_path in result_files:
         full_path = os.path.join(results_dir, file_path)
         metrics = evaluate_classification_results(full_path)
-        file_name = os.path.basename(file_path)
-        evaluations[file_name] = metrics
-    return evaluations
+        evaluations[file_path] = metrics
+
+        # Collect token data for summary
+        token_data = {
+            'File Name': custom_label(file_path),
+            'Total Prompt Tokens': metrics['total_prompt_tokens'],
+            'Total Completion Tokens': metrics['total_completion_tokens'],
+            'Total Tokens': metrics['total_tokens']
+        }
+        token_summaries.append(token_data)
+    
+    return evaluations, pd.DataFrame(token_summaries).set_index('File Name')
 
 def evaluate_single_result(file_path):
     if os.path.exists(file_path):
@@ -268,3 +278,56 @@ def evaluate_single_result(file_path):
         return {file_name: metrics}
     else:
         raise FileNotFoundError("The specified file does not exist.")
+
+def custom_label(file_name):
+    if "few_shot" in file_name:
+        return "GPT 3.5 Turbo - Few Shot" if "fine_few_shot" not in file_name else "GPT 3.5 Turbo Fine Tuned - Few Shot"
+    elif "zero_shot" in file_name:
+        return "GPT 3.5 Turbo - Zero Shot" if "fine_zero_shot" not in file_name else "GPT 3.5 Turbo Fine Tuned - Zero Shot"
+    elif "fine_no_prompting" in file_name:
+        return "GPT 3.5 Turbo Fine Tuned - No Prompting"
+    return "Unknown Configuration"
+
+def plot_token_comparisons(token_df, original_filename, show=True):
+    fig, ax = plt.subplots(figsize=(12, 6))
+    token_df[['Total Prompt Tokens', 'Total Completion Tokens', 'Total Tokens']].plot(kind='bar', ax=ax)
+    plt.title('Comparison of Token Totals Across Different Results')
+    plt.xlabel('Configuration')
+    plt.ylabel('Number of Tokens')
+    plt.xticks(rotation=45, ha="right")
+    plt.legend(title='Token Types')
+    
+    if show:
+        st.pyplot(fig)
+    else:
+        generate_plot(fig, 'token_comparisons.pgf', original_filename)
+
+def plot_performance_metrics(evaluations, original_filename, show=True):
+    metrics_data = {
+        'Accuracy': [], 'Precision': [], 'Recall': [], 'F1 Score': [],
+        'Kappa': [], 'Specificity': [], 'FPR': [], 'G-Mean': []
+    }
+    
+    labels = [custom_label(file_name) for file_name in evaluations.keys()]
+    for metrics in evaluations.values():
+        for key in metrics_data.keys():
+            metrics_data[key].append(metrics[key.lower().replace(' ', '_').replace('-', '_')])
+
+    fig, ax = plt.subplots(figsize=(14, 8))
+    x = np.arange(len(labels))
+    width = 0.1
+    n = len(metrics_data)
+
+    for i, (metric, values) in enumerate(metrics_data.items()):
+        ax.bar(x - (n/2 - i) * width, values, width, label=metric)
+
+    ax.set_ylabel('Scores')
+    ax.set_title('Comparative Performance Metrics')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=45)
+    ax.legend(title='Metrics')
+
+    if show:
+        st.pyplot(fig)
+    else:
+        generate_plot(fig, 'performance_metrics.pgf', original_filename)
