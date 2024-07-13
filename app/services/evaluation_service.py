@@ -338,3 +338,4 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
         st.pyplot(fig)
     else:
         generate_plot(fig, 'performance_metrics.pgf', original_filename)
+        return metrics_data
