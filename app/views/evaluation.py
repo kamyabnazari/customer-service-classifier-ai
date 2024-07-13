@@ -49,6 +49,8 @@ else:
                 # Detailed Classification Report
                 st.write("**Detailed Classification Report:**")
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
+                report_df = report_df.reset_index()
+                report_df.columns = ['Category', 'Precision', 'Recall', 'F1-Score', 'Support']
                 st.dataframe(report_df, use_container_width=True)
                 generate_table(report_df, "classification_report.tex", original_filename=selected_file)
 
@@ -63,10 +65,14 @@ else:
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
 
                 st.write("**Missing Categories Report:**")
-                missing_categories = report_df[report_df['support'] == 0]
+                report_df_for_missing = pd.DataFrame(metrics['classification_report']).transpose()
+                missing_categories = report_df_for_missing[report_df_for_missing['support'] == 0]
                 # Check if there are any categories to report
                 if not missing_categories.empty:
-                    missing_categories = missing_categories.drop(['support'], axis=1)
+                    missing_categories = missing_categories.reset_index()
+
+                    # Rename columns appropriately for clarity in the LaTeX document
+                    missing_categories.columns = ['Category', 'Precision', 'Recall', 'F1-Score', 'Support']
                     st.dataframe(missing_categories, use_container_width=True)
                     generate_table(missing_categories, "missing_categories.tex", original_filename=file_name)
 
