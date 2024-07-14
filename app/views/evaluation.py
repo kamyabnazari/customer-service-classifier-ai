@@ -102,7 +102,3 @@ else:
                 st.write("**Text Length Analysis:**")
                 plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)
                 plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
-        else:
-            st.error("No evaluation data found in the selected file.")
-    else:
-        st.info("Please select a file to evaluate.")

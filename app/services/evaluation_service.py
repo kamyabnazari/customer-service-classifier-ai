@@ -158,7 +158,9 @@ def generate_table(df, filename, original_filename):
     clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
     
     # Determine the correct column format based on the number of DataFrame columns
-    column_format = " ".join(["X"] * len(df.columns))
+    column_format = []
+    for dtype in df.dtypes:
+        column_format.append('l' if np.issubdtype(dtype, np.number) else 'X')
 
     # Escape special LaTeX characters in DataFrame entries
     df = df.map(lambda x: escape_latex_special_chars(x) if isinstance(x, str) else x)
@@ -175,7 +177,7 @@ def generate_table(df, filename, original_filename):
         multicolumn=True,
         bold_rows=True,
         longtable=False,
-        column_format=column_format
+        column_format=' '.join(column_format)
        )
 
     # Extract headers from DataFrame and format them
