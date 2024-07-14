@@ -1,5 +1,3 @@
-import base64
-import io
 import pandas as pd
 import os
 import csv
@@ -60,19 +58,3 @@ def get_csv_file_path(model, classification_type, classification_method, tempera
 def check_results_exist(model, classification_type, temperature, classification_method):
     csv_file_path = get_csv_file_path(model, classification_type, classification_method, temperature)
     return os.path.isfile(csv_file_path)
-
-def list_result_files(results_dir):
-    result_files = []
-    for root, dirs, files in os.walk(results_dir):
-        for file in files:
-            if file.endswith('.csv'):
-                result_files.append(os.path.join(root, file))
-    return result_files
-
-def generate_download_link(data, file_name):
-    buffer = io.StringIO()
-    data.to_csv(buffer, index=True)
-    buffer.seek(0)
-    b64 = base64.b64encode(buffer.getvalue().encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}.csv">Download CSV</a>'
-    return href
