@@ -3,7 +3,6 @@ from config import OPENAI_API_KEY
 from .logging_service import write_log_to_file, write_results_to_csv
 import time
 
-# Set up the OpenAI API client
 openai = OpenAI(api_key=OPENAI_API_KEY)
 
 def classify_with_gpt_3_5_turbo_zero_shot(text, categories, temperature, classification_method, true_category):
@@ -113,8 +112,8 @@ def list_fine_tune_jobs():
     return response.data
 
 def retry_operation(function, *args, **kwargs):
-    max_retries = 3  # Maximum number of retries
-    retry_delay = 5  # Delay between retries in seconds
+    max_retries = 3
+    retry_delay = 5
     for attempt in range(max_retries):
         try:
             return function(*args, **kwargs)

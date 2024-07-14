@@ -10,16 +10,15 @@ from services.openai_service import (
 
 st.title("Manual Classification")
 
-# Check if a dataset is loaded
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
         st.switch_page("views/home.py")
 else:
-    # Select model and method for manual classification
+    # Auswahl des Modells und der Methode für die manuelle Klassifikation
     model_option = st.selectbox("Select a model", ["GPT-3.5 Turbo", "GPT-3.5 Turbo Fine-Tuned"])
-    
-    # Conditionally enable "No Prompting" method
+
+    # Bedingte Aktivierung der Methode "No Prompting"
     if model_option == "GPT-3.5 Turbo Fine-Tuned":
         method_option = st.selectbox("Select a method", ["Zero-Shot", "Few-Shot", "No Prompting"])
     else:
@@ -27,23 +26,20 @@ else:
     
     temperature_option = st.selectbox("Select Temperature", [0.0, 1.0])
 
-    # Input field for user to enter their prompt
     user_input = st.text_input("Enter text to classify:")
     true_category = st.text_input("Enter true category (optional):")
 
     classification = ""
 
-    # Extract categories from the dataset
     if "categories" in global_state.datasets:
         categories = global_state.datasets["categories"].iloc[:, 0].tolist()
     else:
         st.error("Categories not found in the dataset.")
         st.stop()
 
-    # Button to submit the prompt
+    # Schaltfläche zur Einreichung des Textes
     if st.button("Classify", use_container_width=True):
         if user_input:
-            # Generate the response from OpenAI
             if method_option == "Zero-Shot":
                 if model_option == "GPT-3.5 Turbo":
                     classification = classify_with_gpt_3_5_turbo_zero_shot(user_input, categories, temperature_option, classification_method="manual", true_category=true_category)
@@ -58,7 +54,6 @@ else:
                 if model_option == "GPT-3.5 Turbo Fine-Tuned":
                     classification = classify_with_gpt_3_5_turbo_fine_no_prompting(user_input, temperature_option, classification_method="manual", true_category=true_category)
 
-        # Display the response
         if classification != "":
             st.info(f"Classification: {classification}")
         else:

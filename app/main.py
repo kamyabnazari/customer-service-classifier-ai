@@ -1,10 +1,10 @@
 import streamlit as st
 import settings
 
-# Streamlit app
+# Initialisiere Streamlit-Konfigurationen aus dem settings-Modul
 settings.set_streamlit()
 
-# Define the pages
+# Definiere die Seiten der Anwendung
 pages = [
     st.Page("views/home.py", title="Home"),
     st.Page("views/dataset_viewer.py", title="Dataset Viewer"),
@@ -15,6 +15,6 @@ pages = [
     st.Page("views/utility_tools.py", title="Utility Tools"),
 ]
 
-# Display the selected page
+# Zeige die ausgewählte Seite an
 pg = st.navigation(pages)
 pg.run()

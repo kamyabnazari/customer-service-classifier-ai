@@ -43,7 +43,6 @@ def plot_classification_report(class_report, original_filename, show=True):
     report_df = pd.DataFrame(class_report).transpose()
     report_df.drop(['support'], axis=1, inplace=True)
     
-    # Translate columns for the plot using the dictionary
     report_df.columns = [metrics_translations.get(col, col) for col in report_df.columns]
     
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -97,7 +96,6 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
 
 def plot_token_comparisons(token_df, original_filename, show=True):
     fig, ax = plt.subplots(figsize=(15, 10))
-    # Translate column names for plotting
     translated_columns = [translations[col] for col in ['Total Prompt Tokens', 'Total Completion Tokens', 'Total Tokens']]
     token_df.columns = translated_columns
     token_df[translated_columns].plot(kind='bar', ax=ax)
@@ -149,7 +147,6 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
     if show:
         st.pyplot(fig)
     else:
-        # Convert the dictionary to DataFrame for output
         metrics_df = pd.DataFrame(metrics_data, index=labels)
         generate_plot(fig, 'performance_metrics.pgf', original_filename)
         return metrics_df

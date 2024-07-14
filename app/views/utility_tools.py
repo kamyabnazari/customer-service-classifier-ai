@@ -5,12 +5,10 @@ from services.data_service import csv_to_jsonl, list_jsonl_files
 from services.openai_service import list_fine_tune_jobs, upload_file_to_openai, fine_tune_model, get_fine_tune_status
 import os
 
-# Set up the OpenAI API client
 openai = OpenAI(api_key=OPENAI_API_KEY)
 
 st.title("Utility Tools")
 
-# Check if a dataset is loaded
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
@@ -79,11 +77,9 @@ else:
 
     st.header("Check Fine-Tune Job Status")
 
-    # List existing fine-tuning jobs
     fine_tune_jobs = list_fine_tune_jobs()
     fine_tune_job_options = {f"{job.id} ({job.status})": job.id for job in fine_tune_jobs}
 
-    # Dropdown to select a fine-tune job
     selected_fine_tune_job = st.selectbox("Select a Fine-Tune Job", list(fine_tune_job_options.keys()))
 
     if selected_fine_tune_job:

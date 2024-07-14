@@ -13,7 +13,6 @@ from sklearn.metrics import (
     cohen_kappa_score
 )
 
-# Configure Matplotlib to use LaTeX for rendering
 matplotlib.use('pgf')
 matplotlib.rcParams.update({
     "pgf.texsystem": "pdflatex",
@@ -28,15 +27,12 @@ def evaluate_classification_results(csv_file_path):
     y_pred = df['category']
     labels = np.unique(np.concatenate((y_true, y_pred)))
 
-    # Calculate token totals
     total_prompt_tokens = df['prompt_tokens'].sum()
     total_completion_tokens = df['completion_tokens'].sum()
     total_tokens = total_prompt_tokens + total_completion_tokens
 
-    # Calculate the frequency of each predicted category
     category_usage = df['category'].value_counts()
 
-    # Identify categories in predictions not present in true categories
     unexpected_categories = category_usage.loc[~category_usage.index.isin(y_true.unique())]
 
     metrics = compute_metrics(df, y_true, y_pred, labels)
@@ -91,24 +87,20 @@ def generate_plot(fig, filename, original_filename):
     if not os.path.exists(tex_directory):
         os.makedirs(tex_directory)
     
-    # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
-    # Adjust the order of clean name and filename
+    
     pgf_filename = f"pgf-{clean_name}-{filename.replace('.pgf', '').replace('_', '-')}.pgf"
     figure_filename = f"figure-{clean_name}-{filename.replace('.pgf', '').replace('_', '-')}.tex"
     pgf_path = os.path.join(pgf_directory, pgf_filename)
     tex_path = os.path.join(tex_directory, figure_filename)
 
-    # Save the figure to the PGF path
     fig.savefig(pgf_path, format='pgf')
     plt.close(fig)
 
-    # Format the caption text: replace underscores, capitalize first letters, and remove extensions
     formatted_caption = " ".join([word.capitalize() for word in filename.replace('.pgf', '').replace('_', ' ').split()])
     clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
 
-    # Create the LaTeX file at the TeX path
     with open(tex_path, "w") as tex_file:
         tex_file.write(
             "\\begin{figure}[ht]\n"
@@ -123,7 +115,6 @@ def generate_plot(fig, filename, original_filename):
 
 def escape_latex_special_chars(text):
     """Escape special LaTeX characters in strings."""
-    # Add other special characters as needed
     char_map = {
         '_': r'\_',
         '%': r'\%',
@@ -144,29 +135,23 @@ def generate_table(df, filename, original_filename):
     if not os.path.exists(tex_directory):
         os.makedirs(tex_directory)
     
-    # Clean and prepare the file name
     base_name = os.path.splitext(original_filename)[0]
     clean_name = base_name.replace("classification_results_", "").replace("_", "-").replace(".", "-")
     clean_name = '-'.join(filter(None, clean_name.split('-')))
     new_filename = f"table-{filename.replace('.tex', '').replace('_', '-')}-{clean_name}.tex"
     path = os.path.join(tex_directory, new_filename)
     
-    # Format the caption text: replace underscores, capitalize first letters
     formatted_caption = " ".join([word.capitalize() for word in filename.replace('.tex', '').replace('_', ' ').split()])
     clean_caption = " ".join([word.capitalize() for word in clean_name.split('-')])
     
-    # Determine the correct column format based on the number of DataFrame columns
     column_format = []
     for dtype in df.dtypes:
         column_format.append('l' if np.issubdtype(dtype, np.number) else 'X')
 
-    # Escape special LaTeX characters in DataFrame entries
     df = df.map(lambda x: escape_latex_special_chars(x) if isinstance(x, str) else x)
 
-    # Format DataFrame for LaTeX
     df = df.map(lambda x: f"\\num{{{x}}}" if isinstance(x, (int, float)) else x)
 
-    # Generate LaTeX table without custom headers
     latex_table = df.to_latex(
         index=False,
         escape=False,
@@ -178,7 +163,6 @@ def generate_table(df, filename, original_filename):
         column_format=' '.join(column_format)
        )
 
-    # Extract headers from DataFrame and format them
     headers = " & ".join([f"\\textbf{{{col}}}" for col in df.columns])
     latex_table = latex_table.split('\n')
     start = latex_table.index("\\toprule") + 1
@@ -188,7 +172,6 @@ def generate_table(df, filename, original_filename):
     latex_table = latex_table.replace("\\begin{tabular}", "\\begin{tabularx}{\\textwidth}")
     latex_table = latex_table.replace("\\end{tabular}", "\\end{tabularx}")
     
-    # Wrap the table with the table environment
     latex_str = f"""
     \\begin{{table}}[!ht]
         \\centering
@@ -198,7 +181,6 @@ def generate_table(df, filename, original_filename):
     \\end{{table}}
     """
 
-    # Save the LaTeX string to file
     with open(path, 'w') as file:
         file.write(latex_str)
 
@@ -211,7 +193,6 @@ def evaluate_all_results(results_dir):
         metrics = evaluate_classification_results(full_path)
         evaluations[file_path] = metrics
 
-        # Collect token data for summary
         token_data = {
             'Model': custom_label(file_path),
             'Total Prompt Tokens': metrics['total_prompt_tokens'],

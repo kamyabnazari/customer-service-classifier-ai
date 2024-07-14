@@ -1,7 +1,7 @@
 import streamlit as st
 
 def set_streamlit():
-    # Set app Config and Icon
+    # Konfiguriere die Streamlit-Seite mit Titel, Icon, Seitenleiste, Layout und Menü
     st.set_page_config(
         page_title="Customer Service Classifier AI",
         page_icon="favicon.ico",
@@ -12,8 +12,8 @@ def set_streamlit():
             }
         )
 
-    # Set Navigation Bar Logo
+    # Füge ein Logo zur Navigationsleiste hinzu
     st.logo(image="misc/customer_service_classifier_ai_icon.png")
 
-    # Set Application Header 
+    # Füge eine Überschrift mit Regenbogen-Trenner hinzu
     st.header('Customer Service Classifier AI', divider='rainbow')

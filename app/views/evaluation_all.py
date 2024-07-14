@@ -16,31 +16,35 @@ if not st.session_state.get("dataset_loaded", False):
     if st.button("Go to Home"):
         st.switch_page("views/home.py")
 else:
-    # User selects a directory of result files
+    # Auswahlbox für den Pfad, in dem die Ergebnisdateien liegen
     results_dir = st.selectbox('Select the directory path for evaluation results:', ['./customer_service_classifier_ai_data/results/automated'])
 
     if st.button('Compare Results', use_container_width=True):
+        # Auswertung aller Ergebnisse und Erzeugung einer Datenstruktur für Token und Metriken
         evaluations, token_df = evaluate_all_results(results_dir)
         
+        # Darstellung und Anzeige des Token-Vergleichs
         st.write("**Token Comparison Plot:**")
         plot_token_comparisons(token_df, 'token_comparisons.pgf', show=True)
         plot_token_comparisons(token_df, 'token_comparisons.pgf', show=False)
 
         st.divider()
 
-        # Optionally, display the raw data table as well
+        # Optionale Anzeige der Rohdatentabelle der Token
         st.write("**Token Comparison Data:**")
         st.dataframe(token_df, use_container_width=True)
         generate_table(token_df, "token_comparison.tex", original_filename="all-evaluations")
 
         st.divider()
 
+        # Darstellung und Anzeige der Leistungsmetriken
         st.write("**Performance Metrics:**")
         plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=True)
         metrics_performance = plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=False)
 
         st.divider()
 
+        # Anzeige der Daten zur Leistungsmetrik in Tabelle
         st.write("**Performance Metrics Data:**")
         metrics_performance = metrics_performance.reset_index()
         metrics_performance.columns = ['Model', 'Genauigkeit', 'Präzision', 'Erinnerungswert', 'F1-Wert', 'Kappa', 'Spezifität', 'Falsche Positive Rate', 'G-Mittelwert']

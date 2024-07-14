@@ -11,19 +11,19 @@ from services.plot_service import (
 
 st.title("Evaluation")
 
-# Check if a dataset is loaded
+# Überprüfung, ob ein Datensatz geladen ist, und Navigation zur Startseite, falls erforderlich
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):
         st.switch_page("views/home.py")
 else:
-    # Dropdown to select the directory
+    # Auswahl eines Verzeichnisses für die Bewertungsergebnisse
     directories = [
         './customer_service_classifier_ai_data/results/automated'
     ]
     results_dir = st.selectbox('Select the directory path for evaluation results:', directories)
 
-    # Dropdown to select a specific file within the directory
+    # Auswahl einer spezifischen Datei innerhalb des Verzeichnisses für die Evaluation
     if os.path.exists(results_dir):
         files = os.listdir(results_dir)
         selected_file = st.selectbox('Select a file for evaluation:', files)
@@ -32,15 +32,17 @@ else:
         selected_file = None
         st.error("Selected directory is empty or does not exist.")
 
+    # Ausführung der Bewertung, wenn eine Datei ausgewählt wurde
     if st.button('Evaluate Results', use_container_width=True) and selected_file:
         file_path = os.path.join(results_dir, selected_file)
         evaluations = evaluate_single_result(file_path)
         if evaluations:
+            # Anzeige von Bewertungsmetriken für jede Datei
             st.header("Evaluation Metrics for Each Result File")
             for file_name, metrics in evaluations.items():
                 st.write(f"Results for: {file_name}")
                 
-                # Summary Metrics Table
+                # Anzeige der Zusammenfassung der Bewertungsmetriken
                 summary_metrics = pd.DataFrame({
                     'Metrik': ['Genauigkeit', 'Präzision', 'Erinnerungswert', 'F1-Wert', 'Spezifität', 'Kappa', 'Falsche Positive Rate', 'G-Mittelwert'],
                     'Wert': [metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1_score'], metrics['specificity'], metrics['kappa'], metrics['fpr'], metrics['g_mean']]
@@ -50,7 +52,7 @@ else:
 
                 st.divider()
 
-                # Detailed Classification Report
+                # Detaillierter Klassifikationsbericht
                 st.write("**Detailed Classification Report:**")
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
                 report_df = report_df.reset_index()
@@ -62,18 +64,17 @@ else:
 
                 st.divider()
 
+                # Unerwartete Kategorieverwendung berichten
                 st.write("**Unexpected Category Usage Report:**")
                 if 'unexpected_categories' in metrics and not metrics['unexpected_categories'].empty:
                     unexpected_categories_df = pd.DataFrame(metrics['unexpected_categories']).transpose()
                     unexpected_categories_df = unexpected_categories_df.reset_index()
 
-                    # Transpose the DataFrame so that categories are rows
                     unexpected_categories_df = unexpected_categories_df.T
                     unexpected_categories_df.columns = ['Anzahl']
                     unexpected_categories_df = unexpected_categories_df.reset_index()
                     unexpected_categories_df.columns = ['Kategorie', 'Anzahl']
 
-                    # Remove the first row which contains unwanted 'index' and 'count' as data
                     unexpected_categories_df = unexpected_categories_df[unexpected_categories_df['Kategorie'] != 'index']
 
                     st.dataframe(unexpected_categories_df, use_container_width=True)
@@ -81,14 +82,12 @@ else:
 
                 st.divider()
 
-                # Confusion Matrix Visualization
                 st.write("**Confusion Matrix:**")
                 plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=True)
                 plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=False)
                 
                 st.divider()
 
-                # Additional Visualizations as discussed
                 st.write("**Classification Report:**")
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=True)
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)

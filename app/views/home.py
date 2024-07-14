@@ -4,21 +4,19 @@ import streamlit as st
 from state import global_state
 from services.data_service import list_datasets, load_datasets
 
-# Set up the OpenAI API client
+# Initialisiere den OpenAI API-Client mit dem bereitgestellten API-Schlüssel
 openai = OpenAI(api_key=OPENAI_API_KEY)
 
-# Set page title
 st.title("Home")
 
-# Initialize session state for dataset loaded state
+# Initialisiere den Session-State für den Ladestatus des Datensatzes, falls noch nicht geschehen
 if "dataset_loaded" not in st.session_state:
     st.session_state.dataset_loaded = False
 
-# List available datasets
 data_dir = './data'
 datasets = list_datasets(data_dir)
 
-# Capitalize the first letter of each dataset name
+# Großschreibung des ersten Buchstabens jedes Datensatznamens für Anzeigezwecke
 datasets_capitalized = [dataset.capitalize() for dataset in datasets]
 
 st.header("Importing Datasets")
@@ -26,17 +24,15 @@ st.header("Importing Datasets")
 col1, col2 = st.columns([3, 1], vertical_alignment="bottom")
 
 with col1:
-    # Select dataset
+    # Dropdown zur Auswahl eines Datensatzes, deaktiviert, wenn bereits ein Datensatz geladen ist
     selected_dataset = st.selectbox("Select a dataset", datasets_capitalized, disabled=st.session_state.dataset_loaded)
 
 with col2:
-    # Conditionally render buttons
+    # Bedingte Darstellung der Laden- und Löschen-Schaltflächen basierend auf dem Ladestatus des Datensatzes
     if not st.session_state.dataset_loaded:
-        # Load dataset button
         if st.button("Load Dataset", use_container_width=True):
             try:
                 if selected_dataset:
-                    # Convert back to lowercase to match the folder names
                     selected_dataset = selected_dataset.lower()
                     global_state.datasets = load_datasets(selected_dataset, data_dir)
                     st.session_state.dataset_loaded = True
@@ -45,14 +41,13 @@ with col2:
             except Exception as e:
                 st.error(f"Failed to load dataset: {e}")
     else:
-        # Delete dataset button
         if st.button("Delete Dataset", type="primary", use_container_width=True):
             global_state.datasets.clear()
             st.session_state.dataset_loaded = False
             st.success("Dataset deleted successfully!")
             st.rerun()
 
-# Display a sample of the loaded data
+# Zeige Details des Datensatzes an, wenn ein Datensatz geladen ist
 if global_state.datasets:
     st.divider()
 

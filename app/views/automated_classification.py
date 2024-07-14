@@ -5,7 +5,7 @@ from services.data_service import check_results_exist
 
 st.title("Automated Classification")
 
-# Check if a dataset is loaded
+# Überprüfung, ob ein Datensatz geladen ist, und Navigation zur Home-Seite, falls erforderlich
 if not st.session_state.get("dataset_loaded", False):
     st.warning("Please load a dataset first on the Home page.")
     if st.button("Go to Home"):

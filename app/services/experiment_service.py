@@ -17,7 +17,6 @@ def classify_test_samples(global_state, model_option, method_option, temperature
 
         samples = test_data # The Full Test Data
         
-        # Extract categories from the dataset
         if "categories" in global_state.datasets:
             categories = global_state.datasets["categories"].iloc[:, 0].tolist()
         else:
@@ -47,9 +46,8 @@ def classify_test_samples(global_state, model_option, method_option, temperature
                         classify_with_gpt_3_5_turbo_fine_few_shot(text, categories, temperature, classification_method, true_category)
             except Exception as e:
                 st.error(f"Failed to process sample {index + 1} due to error: {e}")
-                continue  # Skip the current sample or decide how you want to handle the error
+                continue
 
-            # Update progress bar and text
             progress_percentage = (index + 1) / len(samples)
             progress_bar.progress(progress_percentage)
             progress_text.text(f"Processing sample {index + 1} of {len(samples)}")
