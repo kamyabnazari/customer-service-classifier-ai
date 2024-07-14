@@ -85,7 +85,7 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
     df.boxplot(column='Textlänge', by='Korrekt', ax=ax, boxprops=dict(color=colors[0]), whiskerprops=dict(color=colors[1]))
     plt.title('Textlänge vs. Klassifikationsgenauigkeit', fontsize=16)
     plt.xlabel('Ist Klassifikation korrekt?', fontsize=14)
-    plt.ylabel('Textlänge', fontsize=14)
+    plt.ylabel('Textlänge (Wörter)', fontsize=14)
     plt.xticks([1, 2], ['Falsch', 'Richtig'], fontsize=10)
     plt.suptitle('')
     plt.tight_layout()
