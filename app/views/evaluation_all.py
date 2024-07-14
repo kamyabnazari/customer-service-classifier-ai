@@ -1,5 +1,12 @@
 import streamlit as st
-from services.evaluation_service import evaluate_all_results, generate_table, plot_performance_metrics, plot_token_comparisons
+from services.evaluation_service import (
+    evaluate_all_results,
+    generate_table
+    )
+from services.plot_service import (
+    plot_performance_metrics,
+    plot_token_comparisons
+    )
 
 st.title("Evaluation All")
 

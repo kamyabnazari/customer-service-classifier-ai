@@ -2,7 +2,9 @@ import streamlit as st
 import pandas as pd
 import os
 from services.evaluation_service import (
-    evaluate_single_result, generate_table,
+    evaluate_single_result, generate_table
+)
+from services.plot_service import (
     plot_confusion_matrix, plot_classification_report,
     plot_class_distribution, plot_text_length_analysis
 )
