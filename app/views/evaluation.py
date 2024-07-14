@@ -40,8 +40,8 @@ else:
                 
                 # Summary Metrics Table
                 summary_metrics = pd.DataFrame({
-                    'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Specificity', 'Kappa', 'False Positive Rate', 'G-Mean'],
-                    'Value': [metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1_score'], metrics['specificity'], metrics['kappa'], metrics['fpr'], metrics['g_mean']]
+                    'Metrik': ['Genauigkeit', 'Präzision', 'Erinnerungswert', 'F1-Wert', 'Spezifität', 'Kappa', 'Falsche Positive Rate', 'G-Mittelwert'],
+                    'Wert': [metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1_score'], metrics['specificity'], metrics['kappa'], metrics['fpr'], metrics['g_mean']]
                 })
                 st.dataframe(summary_metrics, use_container_width=True)
                 generate_table(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file)
@@ -50,9 +50,9 @@ else:
                 st.write("**Detailed Classification Report:**")
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
                 report_df = report_df.reset_index()
-                report_df.columns = ['Category', 'Precision', 'Recall', 'F1-Score', 'Support']
-                report_df = report_df[~report_df['Category'].isin(['accuracy', 'macro avg', 'weighted avg'])]
-                report_df = report_df.sort_values(by='Precision', ascending=False)
+                report_df.columns = ['Kategorie', 'Präzision', 'Erinnerungswert', 'F1-Wert', 'Unterstützung']
+                report_df = report_df[~report_df['Kategorie'].isin(['accuracy', 'macro avg', 'weighted avg'])]
+                report_df = report_df.sort_values(by='Präzision', ascending=False)
                 st.dataframe(report_df, use_container_width=True)
                 generate_table(report_df, "classification_report.tex", original_filename=selected_file)
 
@@ -63,12 +63,12 @@ else:
 
                     # Transpose the DataFrame so that categories are rows
                     unexpected_categories_df = unexpected_categories_df.T
-                    unexpected_categories_df.columns = ['Count']
+                    unexpected_categories_df.columns = ['Anzahl']
                     unexpected_categories_df = unexpected_categories_df.reset_index()
-                    unexpected_categories_df.columns = ['Category', 'Count']
+                    unexpected_categories_df.columns = ['Kategorie', 'Anzahl']
 
                     # Remove the first row which contains unwanted 'index' and 'count' as data
-                    unexpected_categories_df = unexpected_categories_df[unexpected_categories_df['Category'] != 'index']
+                    unexpected_categories_df = unexpected_categories_df[unexpected_categories_df['Kategorie'] != 'index']
 
                     st.dataframe(unexpected_categories_df, use_container_width=True)
                     generate_table(unexpected_categories_df, "unexpected_categories.tex", original_filename=file_name)
