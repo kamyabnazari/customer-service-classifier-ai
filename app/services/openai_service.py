@@ -147,15 +147,6 @@ def get_fine_tuning_metrics(fine_tune_id, base_results_dir='./customer_service_c
         # Retrieve fine-tuning job details
         fine_tune = openai.fine_tuning.jobs.retrieve(fine_tune_id)
 
-        # Print fine-tuning job details
-        print("Fine-tuning job details:")
-        print(f"ID: {fine_tune.id}")
-        print(f"Status: {fine_tune.status}")
-        print(f"Model: {fine_tune.model}")
-        print(f"Created At: {fine_tune.created_at}")
-        print(f"Updated At: {fine_tune.finished_at}")
-        print(f"Hyperparameters: {fine_tune.hyperparameters}")
-
         # If the fine-tuning job is completed, retrieve the result files
         if fine_tune.status == 'succeeded':
             for result_file in fine_tune.result_files:
