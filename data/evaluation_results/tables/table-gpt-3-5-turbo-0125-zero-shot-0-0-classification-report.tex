@@ -1,0 +1,101 @@
+
+    \begin{table}[!ht]
+        \centering
+        \begin{tabularx}{\textwidth}{X l l l l}
+\toprule
+\textbf{Kategorie} & \textbf{Präzision} & \textbf{Erinnerungswert} & \textbf{F1-Wert} & \textbf{Unterstützung} \\
+\midrule
+getting\_spare\_card & \num{1.0} & \num{0.05} & \num{0.09523809523809523} & \num{40.0} \\
+pending\_card\_payment & \num{1.0} & \num{0.475} & \num{0.6440677966101694} & \num{40.0} \\
+card\_linking & \num{1.0} & \num{0.725} & \num{0.8405797101449275} & \num{40.0} \\
+top\_up\_by\_cash\_or\_cheque & \num{1.0} & \num{0.85} & \num{0.918918918918919} & \num{40.0} \\
+verify\_top\_up & \num{1.0} & \num{0.8} & \num{0.8888888888888888} & \num{40.0} \\
+declined\_transfer & \num{1.0} & \num{0.625} & \num{0.7692307692307693} & \num{40.0} \\
+direct\_debit\_payment\_not\_recognised & \num{1.0} & \num{0.475} & \num{0.6440677966101694} & \num{40.0} \\
+beneficiary\_not\_allowed & \num{1.0} & \num{0.225} & \num{0.3673469387755102} & \num{40.0} \\
+virtual\_card\_not\_working & \num{1.0} & \num{0.325} & \num{0.49056603773584906} & \num{40.0} \\
+visa\_or\_mastercard & \num{1.0} & \num{0.525} & \num{0.6885245901639344} & \num{40.0} \\
+automatic\_top\_up & \num{1.0} & \num{0.825} & \num{0.9041095890410958} & \num{40.0} \\
+lost\_or\_stolen\_phone & \num{1.0} & \num{0.9} & \num{0.9473684210526315} & \num{40.0} \\
+apple\_pay\_or\_google\_pay & \num{1.0} & \num{0.6} & \num{0.75} & \num{40.0} \\
+age\_limit & \num{1.0} & \num{0.9} & \num{0.9473684210526315} & \num{40.0} \\
+top\_up\_reverted & \num{1.0} & \num{0.45} & \num{0.6206896551724138} & \num{40.0} \\
+transaction\_charged\_twice & \num{0.9743589743589743} & \num{0.95} & \num{0.9620253164556962} & \num{40.0} \\
+contactless\_not\_working & \num{0.9736842105263158} & \num{0.925} & \num{0.9487179487179487} & \num{40.0} \\
+passcode\_forgotten & \num{0.9722222222222222} & \num{0.875} & \num{0.9210526315789473} & \num{40.0} \\
+activate\_my\_card & \num{0.9722222222222222} & \num{0.875} & \num{0.9210526315789473} & \num{40.0} \\
+Refund\_not\_showing\_up & \num{0.9655172413793104} & \num{0.7} & \num{0.8115942028985508} & \num{40.0} \\
+wrong\_amount\_of\_cash\_received & \num{0.9565217391304348} & \num{0.55} & \num{0.6984126984126984} & \num{40.0} \\
+card\_swallowed & \num{0.9354838709677419} & \num{0.725} & \num{0.8169014084507042} & \num{40.0} \\
+terminate\_account & \num{0.9302325581395349} & \num{1.0} & \num{0.963855421686747} & \num{40.0} \\
+unable\_to\_verify\_identity & \num{0.9285714285714286} & \num{0.325} & \num{0.48148148148148145} & \num{40.0} \\
+balance\_not\_updated\_after\_cheque\_or\_cash\_deposit & \num{0.9047619047619048} & \num{0.475} & \num{0.6229508196721312} & \num{40.0} \\
+disposable\_card\_limits & \num{0.9} & \num{0.675} & \num{0.7714285714285715} & \num{40.0} \\
+top\_up\_by\_card\_charge & \num{0.8974358974358975} & \num{0.875} & \num{0.8860759493670886} & \num{40.0} \\
+exchange\_charge & \num{0.8888888888888888} & \num{0.2} & \num{0.32653061224489793} & \num{40.0} \\
+card\_about\_to\_expire & \num{0.8888888888888888} & \num{0.4} & \num{0.5517241379310345} & \num{40.0} \\
+edit\_personal\_details & \num{0.8863636363636364} & \num{0.975} & \num{0.9285714285714286} & \num{40.0} \\
+pending\_cash\_withdrawal & \num{0.8666666666666667} & \num{0.65} & \num{0.7428571428571429} & \num{40.0} \\
+declined\_cash\_withdrawal & \num{0.8461538461538461} & \num{0.275} & \num{0.41509433962264153} & \num{40.0} \\
+cancel\_transfer & \num{0.84375} & \num{0.675} & \num{0.75} & \num{40.0} \\
+top\_up\_limits & \num{0.8333333333333334} & \num{1.0} & \num{0.9090909090909091} & \num{40.0} \\
+verify\_source\_of\_funds & \num{0.8222222222222222} & \num{0.925} & \num{0.8705882352941177} & \num{40.0} \\
+card\_payment\_fee\_charged & \num{0.8} & \num{0.7} & \num{0.7466666666666667} & \num{40.0} \\
+cash\_withdrawal\_charge & \num{0.7567567567567568} & \num{0.7} & \num{0.7272727272727273} & \num{40.0} \\
+request\_refund & \num{0.7555555555555555} & \num{0.85} & \num{0.8} & \num{40.0} \\
+getting\_virtual\_card & \num{0.7450980392156863} & \num{0.95} & \num{0.8351648351648352} & \num{40.0} \\
+card\_acceptance & \num{0.7358490566037735} & \num{0.975} & \num{0.8387096774193549} & \num{40.0} \\
+compromised\_card & \num{0.725} & \num{0.725} & \num{0.725} & \num{40.0} \\
+transfer\_fee\_charged & \num{0.7073170731707317} & \num{0.725} & \num{0.7160493827160493} & \num{40.0} \\
+country\_support & \num{0.7073170731707317} & \num{0.725} & \num{0.7160493827160493} & \num{40.0} \\
+wrong\_exchange\_rate\_for\_cash\_withdrawal & \num{0.6956521739130435} & \num{0.4} & \num{0.5079365079365079} & \num{40.0} \\
+exchange\_via\_app & \num{0.6857142857142857} & \num{0.6} & \num{0.64} & \num{40.0} \\
+reverted\_card\_payment? & \num{0.6842105263157895} & \num{0.325} & \num{0.4406779661016949} & \num{40.0} \\
+pending\_top\_up & \num{0.68} & \num{0.425} & \num{0.5230769230769231} & \num{40.0} \\
+lost\_or\_stolen\_card & \num{0.6785714285714286} & \num{0.95} & \num{0.7916666666666666} & \num{40.0} \\
+change\_pin & \num{0.6779661016949152} & \num{1.0} & \num{0.8080808080808081} & \num{40.0} \\
+failed\_transfer & \num{0.6666666666666666} & \num{0.85} & \num{0.7472527472527473} & \num{40.0} \\
+transfer\_into\_account & \num{0.6428571428571429} & \num{0.45} & \num{0.5294117647058824} & \num{40.0} \\
+top\_up\_failed & \num{0.6382978723404256} & \num{0.75} & \num{0.6896551724137931} & \num{40.0} \\
+fiat\_currency\_support & \num{0.6} & \num{0.525} & \num{0.56} & \num{40.0} \\
+pin\_blocked & \num{0.576271186440678} & \num{0.85} & \num{0.6868686868686869} & \num{40.0} \\
+declined\_card\_payment & \num{0.575} & \num{0.575} & \num{0.575} & \num{40.0} \\
+get\_disposable\_virtual\_card & \num{0.5555555555555556} & \num{0.625} & \num{0.5882352941176471} & \num{40.0} \\
+supported\_cards\_and\_currencies & \num{0.5263157894736842} & \num{0.5} & \num{0.5128205128205128} & \num{40.0} \\
+card\_not\_working & \num{0.5142857142857142} & \num{0.9} & \num{0.6545454545454545} & \num{40.0} \\
+card\_payment\_wrong\_exchange\_rate & \num{0.47619047619047616} & \num{0.25} & \num{0.32786885245901637} & \num{40.0} \\
+receiving\_money & \num{0.4666666666666667} & \num{0.35} & \num{0.4} & \num{40.0} \\
+extra\_charge\_on\_statement & \num{0.4657534246575342} & \num{0.85} & \num{0.6017699115044248} & \num{40.0} \\
+atm\_support & \num{0.4342105263157895} & \num{0.825} & \num{0.5689655172413793} & \num{40.0} \\
+cash\_withdrawal\_not\_recognised & \num{0.4166666666666667} & \num{0.5} & \num{0.45454545454545453} & \num{40.0} \\
+why\_verify\_identity & \num{0.41237113402061853} & \num{1.0} & \num{0.583941605839416} & \num{40.0} \\
+topping\_up\_by\_card & \num{0.4} & \num{0.15} & \num{0.21818181818181817} & \num{40.0} \\
+card\_delivery\_estimate & \num{0.3917525773195876} & \num{0.95} & \num{0.5547445255474452} & \num{40.0} \\
+transfer\_not\_received\_by\_recipient & \num{0.38636363636363635} & \num{0.425} & \num{0.40476190476190477} & \num{40.0} \\
+verify\_my\_identity & \num{0.3793103448275862} & \num{0.275} & \num{0.3188405797101449} & \num{40.0} \\
+card\_payment\_not\_recognised & \num{0.36} & \num{0.675} & \num{0.46956521739130436} & \num{40.0} \\
+card\_arrival & \num{0.3333333333333333} & \num{0.075} & \num{0.12244897959183673} & \num{40.0} \\
+exchange\_rate & \num{0.32} & \num{1.0} & \num{0.48484848484848486} & \num{40.0} \\
+top\_up\_by\_bank\_transfer\_charge & \num{0.3181818181818182} & \num{0.175} & \num{0.22580645161290322} & \num{40.0} \\
+pending\_transfer & \num{0.3132530120481928} & \num{0.65} & \num{0.42276422764227645} & \num{40.0} \\
+transfer\_timing & \num{0.312} & \num{0.975} & \num{0.4727272727272727} & \num{40.0} \\
+balance\_not\_updated\_after\_bank\_transfer & \num{0.25806451612903225} & \num{0.2} & \num{0.22535211267605634} & \num{40.0} \\
+order\_physical\_card & \num{0.16666666666666666} & \num{0.075} & \num{0.10344827586206896} & \num{40.0} \\
+card\_activation & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+balance\_not\_updated\_after\_cash\_deposit & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+get\_virtual\_card & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+transaction\_timing & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+top\_up\_methods & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+cash\_withdrawal & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+getting\_disposable\_virtual\_card & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+top\_up\_by\_card & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+refund\_not\_showing\_up & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+get\_physical\_card & \num{0.0} & \num{0.0} & \num{0.0} & \num{40.0} \\
+get\_spare\_card & \num{0.0} & \num{0.0} & \num{0.0} & \num{0.0} \\
+\bottomrule
+\end{tabularx}
+
+        \caption{Gpt 3 5 Turbo 0125 Zero Shot 0 0 Classification Report}
+        \label{tab:gpt-3-5-turbo-0125-zero-shot-0-0-classification-report}
+    \end{table}
+    
