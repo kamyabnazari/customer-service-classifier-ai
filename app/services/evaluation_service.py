@@ -203,7 +203,7 @@ def generate_table(df, filename, original_filename):
         file.write(latex_str)
 
 def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
-    fig, ax = plt.subplots(figsize=(20, 20))
+    fig, ax = plt.subplots(figsize=(10, 10))
 
     # Define the boundaries for the segments
     boundaries = [np.min(conf_matrix)] + list(np.linspace(np.min(conf_matrix), np.max(conf_matrix), num=4)) + [np.max(conf_matrix) + 1]
@@ -218,13 +218,14 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     # Setting ticks and labels for clarity
     ax.set_xticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_yticks(np.arange(len(labels)) + 0.5, minor=False)
-    ax.set_xticklabels(labels, rotation=90, fontsize=10)
-    ax.set_yticklabels(labels, fontsize=10)
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
 
     # Set titles and axis labels
     plt.title('Konfusionsmatrix', fontsize=16)
     plt.xlabel('Vorhergesagt (Predicted Category)', fontsize=14)
     plt.ylabel('Wahr (True Category)', fontsize=14)
+    plt.tight_layout()
 
     if show:
         st.pyplot(fig)
@@ -234,12 +235,14 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
 def plot_classification_report(class_report, original_filename, show=True):
     report_df = pd.DataFrame(class_report).transpose()
     report_df.drop(['support'], axis=1, inplace=True)
-    fig, ax = plt.subplots(figsize=(20, 10))
+    fig, ax = plt.subplots(figsize=(10, 5))
     report_df.plot(kind='bar', ax=ax)
     plt.title('Klassifikationsbericht', fontsize=16)
     plt.xlabel('Absichten', fontsize=10)
     plt.ylabel('Werte', fontsize=14)
-    ax.set_xticklabels(report_df.index, rotation=90, fontsize=10)
+    ax.set_xticklabels([])
+    plt.tight_layout()
+
     if show:
         st.pyplot(fig)
     else:
@@ -249,12 +252,14 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     actual_counts = pd.Series(y_true).value_counts()
     predicted_counts = pd.Series(y_pred).value_counts()
     df = pd.DataFrame({'Tatsächlich': actual_counts, 'Vorhergesagt': predicted_counts}).fillna(0)
-    fig, ax = plt.subplots(figsize=(20, 10))
+    fig, ax = plt.subplots(figsize=(10, 5))
     df.plot(kind='bar', ax=ax)
     plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt', fontsize=16)
     plt.xlabel('Absichten', fontsize=10)
     plt.ylabel('Häufigkeit', fontsize=14)
-    ax.set_xticklabels(df.index, rotation=90, fontsize=10)
+    ax.set_xticklabels([])
+    plt.tight_layout()
+
     if show:
         st.pyplot(fig)
     else:
@@ -272,6 +277,8 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
     plt.ylabel('Textlänge', fontsize=14)
     plt.xticks([1, 2], ['Incorrect', 'Correct'], fontsize=10)
     plt.suptitle('')
+    plt.tight_layout()
+
     if show:
         st.pyplot(fig)
     else:
@@ -315,14 +322,15 @@ def custom_label(file_name):
     return "Unknown Configuration"
 
 def plot_token_comparisons(token_df, original_filename, show=True):
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(10, 10))
     token_df[['Total Prompt Tokens', 'Total Completion Tokens', 'Total Tokens']].plot(kind='bar', ax=ax)
     plt.title('Comparison of Token Totals Across Different Results')
     plt.xlabel('Configuration')
     plt.ylabel('Number of Tokens')
     plt.xticks(rotation=45, ha="right")
     plt.legend(title='Token Types')
-    
+    plt.tight_layout()
+
     if show:
         st.pyplot(fig)
     else:
@@ -339,7 +347,7 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
         for key in metrics_data.keys():
             metrics_data[key].append(metrics[key.lower().replace(' ', '_').replace('-', '_')])
 
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, ax = plt.subplots(figsize=(10, 10))
     x = np.arange(len(labels))
     width = 0.1
     n = len(metrics_data)
@@ -352,6 +360,7 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
     ax.set_xticks(x)
     ax.set_xticklabels(labels, rotation=45)
     ax.legend(title='Metrics')
+    plt.tight_layout()
 
     if show:
         st.pyplot(fig)
