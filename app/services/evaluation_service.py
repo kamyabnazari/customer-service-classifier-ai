@@ -304,14 +304,14 @@ def evaluate_all_results(results_dir):
 
         # Collect token data for summary
         token_data = {
-            'File Name': custom_label(file_path),
+            'Model': custom_label(file_path),
             'Total Prompt Tokens': metrics['total_prompt_tokens'],
             'Total Completion Tokens': metrics['total_completion_tokens'],
             'Total Tokens': metrics['total_tokens']
         }
         token_summaries.append(token_data)
     
-    return evaluations, pd.DataFrame(token_summaries).set_index('File Name')
+    return evaluations, pd.DataFrame(token_summaries).set_index('Model')
 
 def evaluate_single_result(file_path):
     if os.path.exists(file_path):
@@ -375,23 +375,17 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
     }
     
     labels = [custom_label(file_name) for file_name in evaluations.keys()]
-    # Collect data using English keys
     for metrics in evaluations.values():
         for key in metrics_data:
             formatted_key = key.lower().replace(' ', '_').replace('-', '_')
             metrics_data[key].append(metrics[formatted_key])
 
-    # Setup plot
     fig, ax = plt.subplots(figsize=(15, 10))
     x = np.arange(len(labels))
     width = 0.1
     n = len(metrics_data)
-    
-    # Translate metric names for plotting
-    translated_metrics = {translations[k]: v for k, v in metrics_data.items()}
 
-    # Plot using translated labels
-    for i, (metric, values) in enumerate(translated_metrics.items()):
+    for i, (metric, values) in enumerate(metrics_data.items()):
         ax.bar(x - (n/2 - i) * width, values, width, label=metric)
 
     ax.set_ylabel('Wertungen')
@@ -404,5 +398,7 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
     if show:
         st.pyplot(fig)
     else:
+        # Convert the dictionary to DataFrame for output
+        metrics_df = pd.DataFrame(metrics_data, index=labels)
         generate_plot(fig, 'performance_metrics.pgf', original_filename)
-        return metrics_data
+        return metrics_df

@@ -28,5 +28,8 @@ else:
         plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=True)
         metrics_performance = plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=False)
 
+        st.write("**Performance Metrics Data:**")
+        metrics_performance = metrics_performance.reset_index()
+        metrics_performance.columns = ['Model', 'Genauigkeit', 'Präzision', 'Erinnerungswert', 'F1-Wert', 'Kappa', 'Spezifität', 'Falsche Positive Rate', 'G-Mittelwert']
         st.dataframe(metrics_performance, use_container_width=True)
-        # generate_table(metrics_performance, "performance_metrics.tex", original_filename="all-evaluations")
+        generate_table(metrics_performance, "performance_metrics.tex", original_filename="all-evaluations")
