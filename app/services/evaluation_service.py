@@ -17,8 +17,8 @@ matplotlib.use('pgf')
 matplotlib.rcParams.update({
     "pgf.texsystem": "pdflatex",
     'font.family': 'serif',
-    'text.usetex': True,
-    'pgf.rcfonts': False,
+    'text.usetex': False,
+    'pgf.rcfonts': False
 })
 
 def evaluate_classification_results(csv_file_path):
