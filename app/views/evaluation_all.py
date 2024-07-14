@@ -25,8 +25,8 @@ else:
         
         # Darstellung und Anzeige des Token-Vergleichs
         st.write("**Token Comparison Plot:**")
-        plot_token_comparisons(token_df, 'token_comparisons.pgf', show=True)
-        plot_token_comparisons(token_df, 'token_comparisons.pgf', show=False)
+        plot_token_comparisons(token_df, 'all-evaluations', show=True)
+        plot_token_comparisons(token_df, 'all-evaluations', show=False)
 
         st.divider()
 
@@ -39,8 +39,8 @@ else:
 
         # Darstellung und Anzeige der Leistungsmetriken
         st.write("**Performance Metrics:**")
-        plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=True)
-        metrics_performance = plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=False)
+        plot_performance_metrics(evaluations, 'all-evaluations', show=True)
+        metrics_performance = plot_performance_metrics(evaluations, 'all-evaluations', show=False)
 
         st.divider()
 
