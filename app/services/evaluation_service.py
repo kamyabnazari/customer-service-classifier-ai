@@ -123,6 +123,22 @@ def generate_plot(fig, filename, original_filename):
             "\\end{figure}\n"
         )
 
+def escape_latex_special_chars(text):
+    """Escape special LaTeX characters in strings."""
+    # Add other special characters as needed
+    char_map = {
+        '_': r'\_',
+        '%': r'\%',
+        '$': r'\$',
+        '#': r'\#',
+        '&': r'\&',
+        '{': r'\{',
+        '}': r'\}',
+    }
+    for char, escaped_char in char_map.items():
+        text = text.replace(char, escaped_char)
+    return text
+
 def generate_table(df, filename, original_filename):
     """Convert DataFrame to LaTeX and create a download link with a unique file name."""
     tex_directory = "./customer_service_classifier_ai_data/evaluation/tables"
@@ -143,6 +159,9 @@ def generate_table(df, filename, original_filename):
     
     # Determine the correct column format based on the number of DataFrame columns
     column_format = " ".join(["X"] * len(df.columns))
+
+    # Escape special LaTeX characters in DataFrame entries
+    df = df.map(lambda x: escape_latex_special_chars(x) if isinstance(x, str) else x)
 
     # Format DataFrame for LaTeX
     df = df.map(lambda x: f"\\num{{{x}}}" if isinstance(x, (int, float)) else x)
