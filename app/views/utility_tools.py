@@ -2,7 +2,7 @@ from openai import OpenAI
 from config import OPENAI_API_KEY
 import streamlit as st
 from services.data_service import csv_to_jsonl, list_jsonl_files
-from services.openai_service import list_fine_tune_jobs, upload_file_to_openai, fine_tune_model, get_fine_tune_status
+from services.openai_service import list_fine_tune_jobs, upload_file_to_openai, fine_tune_model, get_fine_tune_status, get_fine_tuning_metrics
 import os
 
 openai = OpenAI(api_key=OPENAI_API_KEY)
@@ -75,7 +75,7 @@ else:
 
     st.divider()
 
-    st.header("Check Fine-Tune Job Status")
+    st.header("Generate Fine-Tune Job Metrics")
 
     fine_tune_jobs = list_fine_tune_jobs()
     fine_tune_job_options = {f"{job.id} ({job.status})": job.id for job in fine_tune_jobs}
@@ -85,16 +85,11 @@ else:
     if selected_fine_tune_job:
         fine_tuning_job_id = fine_tune_job_options[selected_fine_tune_job]
         
-        if st.button("Check Selected Fine-Tune Status", use_container_width=True):
+        if st.button("Generate Fine-Tune Job Metrics", use_container_width=True):
             try:
                 status_response = get_fine_tune_status(fine_tuning_job_id)
                 status = status_response.status
-                
-                if status in ["validating_files", "queued", "running"]:
-                    st.info(f"Fine-tune status: {status}")
-                elif status in ["failed", "cancelled"]:
-                    st.error(f"Fine-tune status: {status}")
-                elif status == "succeeded":
-                    st.success(f"Fine-tune status: {status}")
+                if status == "succeeded":
+                    get_fine_tuning_metrics(fine_tuning_job_id)
             except Exception as e:
                 st.error(f"Failed to retrieve fine-tune status: {e}")

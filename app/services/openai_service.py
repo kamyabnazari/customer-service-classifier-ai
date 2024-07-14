@@ -1,4 +1,8 @@
+import base64
+from io import BytesIO
+import os
 from openai import OpenAI
+import pandas as pd
 from config import OPENAI_API_KEY
 from .logging_service import write_log_to_file, write_results_to_csv
 import time
@@ -125,3 +129,41 @@ def retry_operation(function, *args, **kwargs):
             else:
                 print("All retry attempts failed.")
                 raise
+
+# Function to retrieve fine-tuning job metrics
+def get_fine_tuning_metrics(fine_tune_id, base_results_dir='./customer_service_classifier_ai_data/results', folder_name='training'):
+    try:
+        # Create the directory if it does not exist
+        output_dir = os.path.join(base_results_dir, folder_name)
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Set the output CSV file path
+        output_csv = os.path.join(output_dir, 'fine_tuning_metrics.csv')
+
+        # Retrieve fine-tuning job details
+        fine_tune = openai.fine_tuning.jobs.retrieve(fine_tune_id)
+
+        # Print fine-tuning job details
+        print("Fine-tuning job details:")
+        print(f"ID: {fine_tune.id}")
+        print(f"Status: {fine_tune.status}")
+        print(f"Model: {fine_tune.model}")
+        print(f"Created At: {fine_tune.created_at}")
+        print(f"Updated At: {fine_tune.finished_at}")
+        print(f"Hyperparameters: {fine_tune.hyperparameters}")
+
+        # If the fine-tuning job is completed, retrieve the result files
+        if fine_tune.status == 'succeeded':
+            for result_file in fine_tune.result_files:
+                result_file_content = openai.files.content(file_id=result_file)
+                content_bytes = result_file_content.read()
+
+                # Decode the base64 content
+                decoded_content = base64.b64decode(content_bytes)
+
+                # Convert the decoded content to a pandas DataFrame
+                result_df = pd.read_csv(BytesIO(decoded_content))
+                result_df.to_csv(output_csv, index=False)
+                
+    except Exception as e:
+        print(f"Error retrieving fine-tuning job metrics: {e}")
