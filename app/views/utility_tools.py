@@ -94,11 +94,11 @@ else:
                     get_fine_tuning_metrics(fine_tuning_job_id)
                     plot_training_metrics(
                         "./customer_service_classifier_ai_data/results/training/fine_tuning_metrics.csv",
-                        'token_comparisons.pgf',
+                        'all-evaluations',
                         show=True)
                     plot_training_metrics(
                         "./customer_service_classifier_ai_data/results/training/fine_tuning_metrics.csv",
-                        'token_comparisons.pgf',
+                        'all-evaluations',
                         show=False)
             except Exception as e:
                 st.error(f"Failed to retrieve fine-tune status: {e}")
