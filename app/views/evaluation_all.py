@@ -19,14 +19,20 @@ else:
         plot_token_comparisons(token_df, 'token_comparisons.pgf', show=True)
         plot_token_comparisons(token_df, 'token_comparisons.pgf', show=False)
 
+        st.divider()
+
         # Optionally, display the raw data table as well
         st.write("**Token Comparison Data:**")
         st.dataframe(token_df, use_container_width=True)
         generate_table(token_df, "token_comparison.tex", original_filename="all-evaluations")
 
+        st.divider()
+
         st.write("**Performance Metrics:**")
         plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=True)
         metrics_performance = plot_performance_metrics(evaluations, 'performance_metrics.pgf', show=False)
+
+        st.divider()
 
         st.write("**Performance Metrics Data:**")
         metrics_performance = metrics_performance.reset_index()

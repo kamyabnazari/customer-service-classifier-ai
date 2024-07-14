@@ -46,6 +46,8 @@ else:
                 st.dataframe(summary_metrics, use_container_width=True)
                 generate_table(summary_metrics, "summary_metrics_report.tex", original_filename=selected_file)
 
+                st.divider()
+
                 # Detailed Classification Report
                 st.write("**Detailed Classification Report:**")
                 report_df = pd.DataFrame(metrics['classification_report']).transpose()
@@ -55,6 +57,8 @@ else:
                 report_df = report_df.sort_values(by='Präzision', ascending=False)
                 st.dataframe(report_df, use_container_width=True)
                 generate_table(report_df, "classification_report.tex", original_filename=selected_file)
+
+                st.divider()
 
                 st.write("**Unexpected Category Usage Report:**")
                 if 'unexpected_categories' in metrics and not metrics['unexpected_categories'].empty:
@@ -73,25 +77,31 @@ else:
                     st.dataframe(unexpected_categories_df, use_container_width=True)
                     generate_table(unexpected_categories_df, "unexpected_categories.tex", original_filename=file_name)
 
+                st.divider()
+
                 # Confusion Matrix Visualization
                 st.write("**Confusion Matrix:**")
                 plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=True)
                 plot_confusion_matrix(metrics['confusion_matrix'], metrics['labels'], original_filename=file_name, show=False)
                 
+                st.divider()
+
                 # Additional Visualizations as discussed
                 st.write("**Classification Report:**")
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=True)
                 plot_classification_report(metrics['classification_report'], original_filename=file_name, show=False)
 
+                st.divider()
+
                 st.write("**Class Distribution:**")
                 plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)
                 plot_class_distribution(metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
 
+                st.divider()
+
                 st.write("**Text Length Analysis:**")
                 plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=True)
                 plot_text_length_analysis(metrics['texts'], metrics['y_true'], metrics['y_pred'], original_filename=file_name, show=False)
-
-                st.divider()
         else:
             st.error("No evaluation data found in the selected file.")
     else:
