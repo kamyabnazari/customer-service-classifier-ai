@@ -3,6 +3,7 @@ from config import OPENAI_API_KEY
 import streamlit as st
 from services.data_service import csv_to_jsonl, list_jsonl_files
 from services.openai_service import list_fine_tune_jobs, upload_file_to_openai, fine_tune_model, get_fine_tune_status, get_fine_tuning_metrics
+from services.plot_service import plot_training_metrics
 import os
 
 openai = OpenAI(api_key=OPENAI_API_KEY)
@@ -91,5 +92,13 @@ else:
                 status = status_response.status
                 if status == "succeeded":
                     get_fine_tuning_metrics(fine_tuning_job_id)
+                    plot_training_metrics(
+                        "./customer_service_classifier_ai_data/results/training/fine_tuning_metrics.csv",
+                        'token_comparisons.pgf',
+                        show=True)
+                    plot_training_metrics(
+                        "./customer_service_classifier_ai_data/results/training/fine_tuning_metrics.csv",
+                        'token_comparisons.pgf',
+                        show=False)
             except Exception as e:
                 st.error(f"Failed to retrieve fine-tune status: {e}")

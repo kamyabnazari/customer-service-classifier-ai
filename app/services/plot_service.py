@@ -150,3 +150,29 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
         metrics_df = pd.DataFrame(metrics_data, index=labels)
         generate_plot(fig, 'performance_metrics.pgf', original_filename)
         return metrics_df
+
+def plot_training_metrics(csv_file, original_filename=None, show=True):
+    df = pd.read_csv(csv_file)
+
+    # Plot the training and validation metrics
+    fig, ax1 = plt.subplots(figsize=(15, 10))
+
+    ax1.set_xlabel('Schritt (jede 10.)')
+    ax1.set_ylabel('Trainingsverlust')
+
+    df = df.iloc[::10, :]
+
+    ax1.plot(df['step'], df['train_loss'], label='Train Loss')
+    ax1.grid(True)
+
+    # Add title and labels
+    plt.title('Trainings- und Validierungsmetriken über Schritte (jede 10.)')
+    fig.tight_layout()
+
+    # Show legend
+    fig.legend(loc='upper left', bbox_to_anchor=(0.1, 0.9))
+
+    if show:
+        st.pyplot(fig)
+    else:
+        generate_plot(fig, 'training_metrics.pgf', original_filename)

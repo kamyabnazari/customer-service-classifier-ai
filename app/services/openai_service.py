@@ -140,6 +140,10 @@ def get_fine_tuning_metrics(fine_tune_id, base_results_dir='./customer_service_c
         # Set the output CSV file path
         output_csv = os.path.join(output_dir, 'fine_tuning_metrics.csv')
 
+        # Check if the file already exists
+        if os.path.exists(output_csv):
+            return
+
         # Retrieve fine-tuning job details
         fine_tune = openai.fine_tuning.jobs.retrieve(fine_tune_id)
 
