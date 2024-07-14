@@ -25,6 +25,10 @@ CustomerServiceClassifierAI is an advanced research project exploring the effect
 
 The project aims to enhance customer interactions and provide strategic insights into the feasibility and effectiveness of LLMs in customer communication using cutting-edge AI technologies. It targets developers, researchers, and customer service professionals looking to innovate at the technology frontier.
 
+## Results:
+
+All Results can be found under the folder data/banking_results
+
 ## Getting Started
 
 ### Tech-Stack
