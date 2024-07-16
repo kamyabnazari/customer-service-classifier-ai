@@ -100,3 +100,15 @@ This project is licensed under the [CC-BY-4.0] License - see the LICENSE file fo
 Special thanks to the OpenAI team for providing the API that powers our intelligent agents.
 
 Additionally for the dataset by [PolyAI]("https://github.com/PolyAI-LDN/task-specific-datasets")
+
+### Citation
+
+If you want to cite this prototype and the bachelor thesis us the following citation.
+
+@misc{Nazari2024,
+  author = {Kamyab Nazari},
+  title = {Verbesserung des Kundenservices mittels großer Sprachmodelle: Eine tiefgehende Untersuchung zur Klassifizierung von Kundenanfragen},
+  year = {2024},
+  howpublished = {\url{https://github.com/kamyabnazari/customer-service-classifier-ai}},
+  note = {Zugriff am: 16. Juli 2024}
+}
