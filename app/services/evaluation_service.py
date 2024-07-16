@@ -213,11 +213,11 @@ def evaluate_single_result(file_path):
 
 def custom_label(file_name):
     if "few_shot" in file_name:
-        return "GPT 3.5 Turbo - Few Shot" if "fine_few_shot" not in file_name else "GPT 3.5 Turbo Fine Tuned - Few Shot"
+        return "GPT 3.5 Turbo \n Few Shot" if "fine_few_shot" not in file_name else "GPT 3.5 Turbo \n Fine Tuned \n Few Shot"
     elif "zero_shot" in file_name:
-        return "GPT 3.5 Turbo - Zero Shot" if "fine_zero_shot" not in file_name else "GPT 3.5 Turbo Fine Tuned - Zero Shot"
+        return "GPT 3.5 Turbo \n Zero Shot" if "fine_zero_shot" not in file_name else "GPT 3.5 Turbo \n Fine Tuned \n Zero Shot"
     elif "fine_no_prompting" in file_name:
-        return "GPT 3.5 Turbo Fine Tuned - Kein Prompting"
+        return "GPT 3.5 Turbo \n Fine Tuned \n Kein Prompting"
     return "Unknown Configuration"
 
 translations = {

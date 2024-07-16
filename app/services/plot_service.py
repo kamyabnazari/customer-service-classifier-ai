@@ -1,3 +1,4 @@
+import textwrap
 import pandas as pd
 import streamlit as st
 from matplotlib import pyplot as plt
@@ -23,15 +24,19 @@ def plot_confusion_matrix(conf_matrix, labels, original_filename, show=True):
     cbar = plt.colorbar(cax, spacing='proportional', ticks=boundaries)
     cbar.set_label('Häufigkeit der Vorhersagen', rotation=270, labelpad=20, fontsize=18)
 
+    # Set the font size for colorbar tick labels
+    cbar.ax.tick_params(labelsize=14)
+
     # Ticks und Labels für Klarheit setzen
     ax.set_xticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_yticks(np.arange(len(labels)) + 0.5, minor=False)
     ax.set_xticklabels([])
     ax.set_yticklabels([])
 
-    plt.title('Konfusionsmatrix', fontsize=16)
-    plt.xlabel('Vorhergesagt (Vorhergesagte Kategorie)', fontsize=14)
-    plt.ylabel('Wahr (Wahre Kategorie)', fontsize=14)
+    plt.title('Konfusionsmatrix', fontsize=20, pad=20)
+    plt.xlabel('Vorhergesagt (Vorhergesagte Kategorie)', fontsize=18, labelpad=20)
+    plt.ylabel('Wahr (Wahre Kategorie)', fontsize=18, labelpad=20)
+
     plt.tight_layout()
 
     if show:
@@ -47,10 +52,15 @@ def plot_classification_report(class_report, original_filename, show=True):
     
     fig, ax = plt.subplots(figsize=(10, 5))
     report_df.plot(kind='bar', ax=ax)
-    plt.title('Klassifikationsbericht', fontsize=16)
-    plt.xlabel('Absichten', fontsize=10)
-    plt.ylabel('Werte', fontsize=14)
+    plt.title('Klassifikationsbericht', fontsize=20, pad=20)
+    plt.xlabel('Absichten', fontsize=18, labelpad=20)
+    plt.ylabel('Werte', fontsize=18, labelpad=20)
     ax.set_xticklabels([])
+
+    # Set font size for x-axis and y-axis tick labels
+    ax.tick_params(axis='x', labelsize=14)
+    ax.tick_params(axis='y', labelsize=14)
+
     plt.tight_layout()
 
     if show:
@@ -64,10 +74,15 @@ def plot_class_distribution(y_true, y_pred, original_filename, show=True):
     df = pd.DataFrame({'Tatsächlich': actual_counts, 'Vorhergesagt': predicted_counts}).fillna(0)
     fig, ax = plt.subplots(figsize=(10, 5))
     df.plot(kind='bar', ax=ax)
-    plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt', fontsize=16)
-    plt.xlabel('Absichten', fontsize=10)
-    plt.ylabel('Häufigkeit', fontsize=14)
+    plt.title('Klassenverteilung - Tatsächlich vs. Vorhergesagt', fontsize=20, pad=20)
+    plt.xlabel('Absichten', fontsize=18, labelpad=20)
+    plt.ylabel('Häufigkeit', fontsize=18, labelpad=20)
     ax.set_xticklabels([])
+
+    # Set font size for x-axis and y-axis tick labels
+    ax.tick_params(axis='x', labelsize=14)
+    ax.tick_params(axis='y', labelsize=14)
+
     plt.tight_layout()
 
     if show:
@@ -82,11 +97,16 @@ def plot_text_length_analysis(texts, y_true, y_pred, original_filename, show=Tru
     fig, ax = plt.subplots(figsize=(10, 5))
     colors = ['blue', 'green']
     df.boxplot(column='Textlänge', by='Korrekt', ax=ax, boxprops=dict(color=colors[0]), whiskerprops=dict(color=colors[1]))
-    plt.title('Textlänge vs. Klassifikationsgenauigkeit', fontsize=16)
-    plt.xlabel('Ist Klassifikation korrekt?', fontsize=14)
-    plt.ylabel('Textlänge (Wörter)', fontsize=14)
-    plt.xticks([1, 2], ['Falsch', 'Richtig'], fontsize=10)
+    plt.title('Textlänge vs. Klassifikationsgenauigkeit', fontsize=20, pad=20)
+    plt.xlabel('Ist Klassifikation korrekt?', fontsize=18, labelpad=20)
+    plt.ylabel('Textlänge (Wörter)', fontsize=18, labelpad=20)
+    plt.xticks([1, 2], ['Falsch', 'Richtig'], fontsize=14)
     plt.suptitle('')
+
+    # Set font size for x-axis and y-axis tick labels
+    ax.tick_params(axis='x', labelsize=14)
+    ax.tick_params(axis='y', labelsize=14)
+
     plt.tight_layout()
 
     if show:
@@ -99,11 +119,16 @@ def plot_token_comparisons(token_df, original_filename, show=True):
     translated_columns = [translations[col] for col in ['Total Prompt Tokens', 'Total Completion Tokens', 'Total Tokens']]
     token_df.columns = translated_columns
     token_df[translated_columns].plot(kind='bar', ax=ax)
-    plt.title('Vergleich der Token-Anzahlen über verschiedene Ergebnisse', fontsize=16)
-    plt.xlabel('Konfiguration', fontsize=14)
-    plt.ylabel('Anzahl der Tokens', fontsize=14)
-    plt.xticks(rotation=45, ha="right")
+    plt.title('Vergleich der Token-Anzahlen über verschiedene Ergebnisse', fontsize=22, pad=20)
+    plt.xlabel('Konfiguration', fontsize=20, labelpad=20)
+    plt.ylabel('Anzahl der Tokens', fontsize=20, labelpad=20)
+    plt.xticks(rotation=0)
     plt.legend(title='Token-Typen')
+
+    # Set font size for x-axis and y-axis tick labels
+    plt.tick_params(axis='x', labelsize=18)
+    plt.tick_params(axis='y', labelsize=18)
+
     plt.tight_layout()
 
     if show:
@@ -137,11 +162,16 @@ def plot_performance_metrics(evaluations, original_filename, show=True):
     for i, (metric, values) in enumerate(metrics_data.items()):
         ax.bar(x - (n/2 - i) * width, values, width, label=metric)
 
-    ax.set_ylabel('Wertungen')
-    ax.set_title('Vergleichende Leistungsmetriken')
+    ax.set_ylabel('Wertungen', fontsize=20, labelpad=20)
+    ax.set_title('Vergleichende Leistungsmetriken', fontsize=22, pad=20)
     ax.set_xticks(x)
-    ax.set_xticklabels(labels, rotation=45)
+    ax.set_xticklabels(labels, rotation=0)
     ax.legend(title='Metriken')
+
+    # Set font size for x-axis and y-axis tick labels
+    ax.tick_params(axis='x', labelsize=18)
+    ax.tick_params(axis='y', labelsize=18)
+
     plt.tight_layout()
 
     if show:
@@ -155,18 +185,23 @@ def plot_training_metrics(csv_file, original_filename=None, show=True):
     df = pd.read_csv(csv_file)
 
     # Plot the training and validation metrics
-    fig, ax1 = plt.subplots(figsize=(15, 10))
+    fig, ax = plt.subplots(figsize=(15, 10))
 
-    ax1.set_xlabel('Schritt (jede 10.)')
-    ax1.set_ylabel('Trainingsverlust')
+    ax.set_xlabel('Schritt (jede 10.)', fontsize=20, labelpad=20)
+    ax.set_ylabel('Trainingsverlust', fontsize=20, labelpad=20)
 
     df = df.iloc[::10, :]
 
-    ax1.plot(df['step'], df['train_loss'], label='Train Loss')
-    ax1.grid(True)
+    ax.plot(df['step'], df['train_loss'], label='Train Loss')
+    ax.grid(True)
 
     # Add title and labels
-    plt.title('Trainings- und Validierungsmetriken über Schritte (jede 10.)')
+    plt.title('Trainings- und Validierungsmetriken über Schritte (jede 10.)', fontsize=22, pad=20)
+
+    # Set font size for x-axis and y-axis tick labels
+    ax.tick_params(axis='x', labelsize=18)
+    ax.tick_params(axis='y', labelsize=18)
+
     fig.tight_layout()
 
     # Show legend
