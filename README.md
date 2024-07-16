@@ -105,6 +105,7 @@ Additionally for the dataset by [PolyAI]("https://github.com/PolyAI-LDN/task-spe
 
 If you want to cite this prototype and the bachelor thesis us the following citation.
 
+```
 @misc{Nazari2024,
   author = {Kamyab Nazari},
   title = {Verbesserung des Kundenservices mittels großer Sprachmodelle: Eine tiefgehende Untersuchung zur Klassifizierung von Kundenanfragen},
@@ -112,3 +113,4 @@ If you want to cite this prototype and the bachelor thesis us the following cita
   howpublished = {\url{https://github.com/kamyabnazari/customer-service-classifier-ai}},
   note = {Zugriff am: 16. Juli 2024}
 }
+```
