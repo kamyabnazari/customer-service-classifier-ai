@@ -19,7 +19,7 @@ CustomerServiceClassifierAI is an advanced research project exploring the effect
 - Adjusts the LLM using specific dataset segments to increase the precision of model predictions.
 - Uses standardized machine learning metrics to objectively assess prototype performance.
 - Assesses the cost-effectiveness of the employed techniques.
-- Used Models are OpenAIs GPT-3.5 Turbo, GPT-4 Turbo, GPT-4o
+- Used Models are OpenAIs GPT-3.5 Turbo.
 
 ## Objective:
 
