@@ -107,10 +107,14 @@ If you want to cite this prototype and the bachelor thesis us the following cita
 
 ```
 @misc{Nazari2024,
-  author = {Kamyab Nazari},
-  title = {Verbesserung des Kundenservices mittels großer Sprachmodelle: Eine tiefgehende Untersuchung zur Klassifizierung von Kundenanfragen},
-  year = {2024},
-  howpublished = {\url{https://github.com/kamyabnazari/customer-service-classifier-ai}},
-  note = {Zugriff am: 16. Juli 2024}
+  author    = {Kamyab Nazari},
+  title     = {Verbesserung des Kundenservices mittels großer Sprachmodelle: Eine tiefgehende Untersuchung zur Klassifizierung von Kundenanfragen},
+  institution = {FB4: Informatik, Kommunikation u. Wirtschaft},
+  series    = {Abschlussarbeiten 2024},
+  number    = {6},
+  type      = {bachelorthesis},
+  pages     = {96},
+  year      = {2024},
+  howpublished = "\url{https://opus4.kobv.de/opus4-htw/frontdoor/index/index/docId/1923}",
 }
 ```
