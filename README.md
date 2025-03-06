@@ -99,11 +99,11 @@ This project is licensed under the [CC-BY-4.0] License - see the LICENSE file fo
 
 Special thanks to the OpenAI team for providing the API that powers our intelligent agents.
 
-Additionally for the dataset by [PolyAI]("https://github.com/PolyAI-LDN/task-specific-datasets")
+Additionally for the dataset by [PolyAI](https://github.com/PolyAI-LDN/task-specific-datasets/)
 
 ### Citation
 
-It is published under the following link: [Published Work]("https://opus4.kobv.de/opus4-htw/frontdoor/index/index/docId/1923").
+It is published under the following link: [Published Work](https://opus4.kobv.de/opus4-htw/frontdoor/index/index/docId/1923/)
 
 If you want to cite this prototype and the bachelor thesis us the following citation.
 
