@@ -103,6 +103,8 @@ Additionally for the dataset by [PolyAI]("https://github.com/PolyAI-LDN/task-spe
 
 ### Citation
 
+It is published under the following link: [Published Work]("https://opus4.kobv.de/opus4-htw/frontdoor/index/index/docId/1923").
+
 If you want to cite this prototype and the bachelor thesis us the following citation.
 
 ```
